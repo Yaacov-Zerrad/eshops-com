@@ -28,14 +28,16 @@ TEMPLATES_DIRS = os.path.join(BASE_DIR, 'templates')
 SECRET_KEY = 'django-insecure-pt(1_&ewgylwd%3$$#_6wmg4wb%n!zdggwbs1e61+5m3+#ddl0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # for my site heroku
 ALLOWED_HOSTS = ['https://yayoportfolio.herokuapp.com/', '127.0.0.1']
 
 
-# Application definition
+# for user perso
 
+
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,7 +46,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'shop',
+    'accounts',
 ]
+
+AUTH_USER_MODEL = 'accounts.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
