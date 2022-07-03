@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-pt(1_&ewgylwd%3$$#_6wmg4wb%n!zdggwbs1e61+5m3+#ddl0
 DEBUG = False
 
 # for my site heroku
-ALLOWED_HOSTS = ['https://yaaportfolio.herokuapp.com/','127.0.0.1']
+ALLOWED_HOSTS = ['https://yayoportfolio.herokuapp.com/', '127.0.0.1']
 
 
 # Application definition
