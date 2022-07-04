@@ -1,7 +1,7 @@
 from django.db import models
-
 # Create your models here.
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.contrib.auth.models import Group, Permission 
 
 class UserManager(BaseUserManager):
     """model gestion"""
@@ -64,12 +64,17 @@ class User(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
-    
-    is_active = models.BooleanField(default=True)
+    # condition
+    is_active = models.BooleanField(default=False)
     staff = models.BooleanField(default=False) # a admin user; non super-user
     admin = models.BooleanField(default=False) # a superuser
     
-    phone = models.CharField(max_length=20)
+    #group and permission
+    groups = models.ManyToManyField(Group, blank=True)
+    user_permissions = models.ManyToManyField(Permission, blank=True)
+    
+    
+    phone = models.CharField(max_length=20, blank=True)
     
     # for email is a username 
     USERNAME_FIELD = 'email'

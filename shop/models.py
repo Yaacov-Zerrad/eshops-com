@@ -32,9 +32,44 @@ class Product(models.Model):
     def __str__(self):
         return self.title
     
+# ---------create new permition in migrate
+
+    # class Meta:
+    #     permissions = (
+    #         ('Can_name_permission1', 'description'),
+    #         ('Can_name_permission2', 'description'),
+    #     )
+    
+    
+#--------------------------create new permission in term
+
+# from django.contrib.auth.models import Group, Permission
+# from django.contrib.contenttypes.models import ContentType
+
+# ct = ContentType.objects.get_for_model(Product)
+# permission = Permission.objects.create(codename='can_do_this', contentype=ct)
+    
+# ----------------new permission for all model
+
+# class CustomPermissions(models.model):
+
+#     class meta:     
+#         # for no database create
+#         managed = False 
+#         #for not create default permissions
+#         default_permissions = () 
+#     # new permission
+
+        # permissions = (
+        #     ('accept_order', 'can accept order'),
+        #     ('reject_order', 'can reject order'),
+        # )
+    
+    
+    
 class Order(models.Model):
     items = models.CharField(max_length=5000)
-    total = models.CharField(max_length=127)
+    total = models.FloatField()
     name = models.CharField(max_length=100)
     email = models.EmailField(max_length=127)
     address = models.CharField(max_length=127)

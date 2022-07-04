@@ -1,14 +1,17 @@
+from django.urls import path, reverse
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+
+from accounts.models import UserManager
 
 from .forms import UserAdminCreationForm, UserAdminChangeForm
 
 User = get_user_model()
 
 # Supprimer le modèle de groupe de l'administrateur. Nous ne l'utilisons pas.
-admin.site.unregister(Group)
+# admin.site.unregister(Group)
 
 class UserAdmin(BaseUserAdmin):
     # Les formulaires pour ajouter et modifier des instances d'utilisateur
@@ -19,11 +22,11 @@ class UserAdmin(BaseUserAdmin):
     # Celles-ci remplacent les définitions de la baseUserAdmin
     # qui font référence à des champs spécifiques sur auth.User.
     list_display = ['email', 'admin', 'staff']
-    list_filter = ['admin']
+    list_filter = ['admin', 'groups', 'user_permissions']
     fieldsets = (
     (None, {'fields': ('email', 'password')}),
     ('Personal info', {'fields': ('phone',)}),
-    ('Permissions', {'fields': ('admin',)}),
+    ('Permissions', {'fields': ('staff','admin','is_active', 'groups', 'user_permissions')}),
     )
     # add_fieldsets n'est pas un attribut ModelAdmin standard. UtilisateurAdmin
     # remplace get_fieldsets pour utiliser cet attribut lors de la création d'un utilisateur.
@@ -35,7 +38,9 @@ class UserAdmin(BaseUserAdmin):
     )
     search_fields = ['email']
     ordering = ['email']
-    filter_horizontal = ()
+    filter_horizontal = ('groups', 'user_permissions',)
+    
+
 
 
 admin.site.register(User, UserAdmin)
