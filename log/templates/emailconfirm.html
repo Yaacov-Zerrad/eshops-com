@@ -1,0 +1,11 @@
+{% autoescape off %}
+welcom in site login systhem
+Hello {{ name }}
+
+confirm your email address by clicking on the following link
+
+link: https//{{domain}}{% url 'log:activate' uidb64=uid token=token %}
+
+
+
+{% endautoescape %}

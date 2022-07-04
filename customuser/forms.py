@@ -13,7 +13,7 @@ class RegisterForm(forms.ModelForm):
 
 class Meta:
     model = User
-    fields = ['email', 'phone']
+    fields = ['email', 'phone', 'firstname', 'lastname']
 
     def clean_email(self):
         '''
@@ -47,7 +47,7 @@ class UserAdminCreationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['email' ]
+        fields = ['email', 'firstname', 'lastname', 'phone' ]
         
 
     def clean(self):
@@ -79,7 +79,7 @@ class UserAdminChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['email', 'password', 'is_active', 'admin']
+        fields = ['email', 'password', 'is_active', 'admin','firstname', 'lastname', 'phone']
 
         def clean_password(self):
             # Indépendamment de ce que l'utilisateur fournit, renvoie la valeur initiale.

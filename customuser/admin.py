@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from accounts.models import UserManager
+from customuser.models import UserManager
 
 from .forms import UserAdminCreationForm, UserAdminChangeForm
 
@@ -25,7 +25,7 @@ class UserAdmin(BaseUserAdmin):
     list_filter = ['admin', 'groups', 'user_permissions']
     fieldsets = (
     (None, {'fields': ('email', 'password')}),
-    ('Personal info', {'fields': ('phone',)}),
+    ('Personal info', {'fields': ( 'firstname', 'lastname', 'phone',)}),
     ('Permissions', {'fields': ('staff','admin','is_active', 'groups', 'user_permissions')}),
     )
     # add_fieldsets n'est pas un attribut ModelAdmin standard. UtilisateurAdmin
@@ -33,7 +33,7 @@ class UserAdmin(BaseUserAdmin):
     add_fieldsets = (
     (None, {
     'classes': ('wide',),
-    'fields': ('email', 'password', 'password_2',)}
+    'fields': ('email', 'password', 'password_2','firstname', 'lastname', 'phone',)}
     ),
     )
     search_fields = ['email']

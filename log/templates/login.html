@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<!-- Core theme CSS (includes Bootstrap)-->
+<link rel="stylesheet" href="{% static 'home/css/styles.css' %}">
+{% endblock css %}
+
+
+{% block content %}
+<div class="container px-4 px-lg-5 mt-5" >
+<center>
+    <h3> Login </h3>
+    
+<h3>{% for message in messages %}
+{{ message }}
+{% endfor %}</h3>
+
+
+{% if user.is_authenticated %}
+<h3> hello {{ firstname }} you are authentificate </h3>
+    <button type="submit" class="btn btn-outline-dark mt-auto"><a href="{% url 'log:logout' %}">logout</a></button>
+
+    {% else %}
+
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="email">email</label>
+        <input type="email" name="email" id="email" placeholder="Enter your email" class="form-label" required>
+        <br>
+        <label for="password">password</label>
+        <input type="password" name="password" id="password" placeholder="Enter your password" class="form-label" required>
+        <br>
+        <button type="submit" class="btn btn-outline-dark mt-auto"> Login </button>
+        <br>
+        <br>
+
+    <p>forget password ? <a href="/log/reset_password">reset</a></p>
+  
+    </form>
+
+
+    <button type="submit" class="btn btn-outline-dark mt-auto"><a href="{% url 'log:register' %}">register</a></button>
+    <!-- <button type="submit"><a href="login">login</a></button> -->
+    
+    
+    {% endif %}
+  </center>
+  
+</div>
+
+
+
+{% endblock content %}

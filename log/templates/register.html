@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<center>
+
+<h4>Registre you</h4>
+
+<!-- <form action="" method="post">
+    {% csrf_token %} -->
+    <form action="/log/register" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="firstname">Firstname</label>
+        <input type="text" name="firstname" id="firstname" placeholder="Enter your Firstname" class="form-label" required>
+        <br>
+        <br>
+        <label for="lastname">Lastname</label>
+        <input type="text" name="lastname" id="lastname" placeholder="Enter your lastname" class="form-label" required>
+        <br>
+        <br>
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" placeholder="Enter your email" class="form-label" required>
+        <br>
+        <br>
+        <label for="phone">Phone</label>
+        <input type="text" name="phone" id="phone" placeholder="Enter your Phone" class="form-label" required>
+        <br>
+        <br>
+        <label for="password">password</label>
+        <input type="password" name="password" id="password" placeholder="Enter your password" class="form-label" required>
+        <br>
+        <br>
+        <label for="password2">password2</label>
+        <input type="password" name="password2" id="password2" placeholder="Enter your password confirme" class="form-label" required>
+        <br>
+        <br>
+        <button type="submit" class="btn btn-primary"> Register </button>
+        <br>
+        <br>
+    </form>
+</center>
+
+
+
+
+{% endblock content %}

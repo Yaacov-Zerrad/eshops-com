@@ -12,7 +12,8 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError('Les utilisateurs doivent avoir une adresse e-mail')
         user = self.model(
-        email=self.normalize_email(email),)
+                        email=self.normalize_email(email),
+                        )
 
 
         user.set_password(password)
@@ -65,7 +66,7 @@ class User(AbstractBaseUser):
         unique=True,
     )
     # condition
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False) # a admin user; non super-user
     admin = models.BooleanField(default=False) # a superuser
     
@@ -73,8 +74,11 @@ class User(AbstractBaseUser):
     groups = models.ManyToManyField(Group, blank=True)
     user_permissions = models.ManyToManyField(Permission, blank=True)
     
-    
+    # personnal info
     phone = models.CharField(max_length=20, blank=True)
+    firstname = models.CharField(max_length=20)
+    lastname = models.CharField(max_length=20)
+    
     
     # for email is a username 
     USERNAME_FIELD = 'email'

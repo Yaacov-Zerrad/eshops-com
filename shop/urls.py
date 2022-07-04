@@ -3,7 +3,7 @@ from django.urls import path
 from .views import checkout, detail, index, templates, temdetail
 from django.conf.urls.static import static
 
-
+app_name='shop'
 urlpatterns = [
     path('', index, name='index'),
     path('<int:pk>', detail , name='detail'),

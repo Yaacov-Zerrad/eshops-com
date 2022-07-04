@@ -13,6 +13,19 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import os
 
+
+# for utilis force_text in email send
+from .info import *
+import django 
+from django.utils.encoding import force_str
+django.utils.encoding.force_text = force_str
+
+# for emil send
+EMAIL_USE_TLS = EMAIL_USE_TLS
+EMAIL_HOST = EMAIL_HOST
+EMAIL_HOST_USER = EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD
+EMAIL_PORT = EMAIL_PORT
 # for heroku
 import django_heroku
 import dj_database_url
@@ -46,10 +59,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'shop',
-    'accounts',
+    'customuser',
+    'log',
 ]
 
-AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = 'customuser.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -93,7 +93,7 @@ $(document).on('click', '.ted',function(){
         cart_string += ": " + cart[i][1] + " x "+ cart[i][0] + "<br>";
         index +=1
     }
-    cart_string += "<a class='btn btn-outline-dark' href='/checkout'>Checkout</a>";
+    cart_string += "<a class='btn btn-outline-dark' href='/shop/checkout'>Checkout</a>";
 
     document.getElementById('cart-popo').setAttribute('data-bs-content', cart_string)
 })
@@ -116,7 +116,8 @@ for (let item in  cart) {
                         </tr>`
     $('#items-list').append(item_string);
 }
-let item_nbr = `<tr >
+let item_nbr = `<br>
+                <tr >
                 <td scope="row">Price and amount total</td>
                 <td > ${nbr}</td>
                 <td> $ ${total}</td>

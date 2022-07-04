@@ -2,8 +2,8 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 
 #decorator and permission
-from accounts.decorators import group_required
-from accounts.mixins import CheckPremiumGroupMixin
+from customuser.decorators import group_required
+from customuser.mixins import CheckPremiumGroupMixin
 from django.views.generic.list import ListView
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import Group
