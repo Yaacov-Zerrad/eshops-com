@@ -116,8 +116,7 @@ for (let item in  cart) {
                         </tr>`
     $('#items-list').append(item_string);
 }
-let item_nbr = `<br>
-                <tr >
+let item_nbr = `<tr>
                 <td scope="row">Price and amount total</td>
                 <td > ${nbr}</td>
                 <td> $ ${total}</td>

@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Category, Product, Order
+from .models import ArticleUser, Cart, Category, Product, Order, Article
+
+from django import forms
 
 admin.site.site_header ="E-shops"
 admin.site.site_title = "YY shops"
@@ -20,3 +22,32 @@ class AdminOrder(admin.ModelAdmin):
 admin.site.register(Category, AdminCategory)
 admin.site.register(Product, AdminProduct)
 admin.site.register(Order, AdminOrder)
+admin.site.register(Cart)
+admin.site.register(ArticleUser)
+
+
+
+
+
+# for ajax
+
+
+class ArticleForm(forms.ModelForm):
+    
+    def __init__(self, *args, **kwargs):
+        super(ArticleForm, self).__init__(*args, **kwargs)
+        ## add a "form-control" class to each form input
+        ## for enabling bootstrap
+        for name in self.fields.keys():
+            self.fields[name].widget.attrs.update({
+                'class': 'form-control',
+            })
+    
+    class Meta:
+        model = Article
+        fields = ("__all__")
+    
+    
+    
+    
+admin.site.register(Article)

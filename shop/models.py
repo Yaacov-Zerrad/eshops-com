@@ -1,5 +1,7 @@
 from django.db import models
 
+from eshops.settings import AUTH_USER_MODEL
+
 class Category(models.Model):
     name = models.CharField(max_length=200)
     date_added = models.DateTimeField(auto_now=True)
@@ -12,10 +14,19 @@ class Category(models.Model):
         ordering = ['-date_added']
         
         
+
+
+        
+        
+        
+        
+        
 class Product(models.Model):
     title = models.CharField(max_length=200)
-    price = models.FloatField()
-    description = models.TextField()
+    price = models.FloatField(default=0)
+    description = models.TextField(blank=True)
+    slug = models.SlugField(unique=True)
+    stock = models.IntegerField(default=0)
     #  etranger key
     Category =models.ForeignKey("Category",  on_delete=models.CASCADE, related_name='category')
     
@@ -64,11 +75,43 @@ class Product(models.Model):
         #     ('accept_order', 'can accept order'),
         #     ('reject_order', 'can reject order'),
         # )
+        
+class Article(models.Model):
+    title = models.CharField(max_length=200)   
+    quantity = models.IntegerField()
+    
+    def __str__(self):
+        return self.title
+
+        
+
+
+class ArticleUser(models.Model):
+    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+    ordered = models.BooleanField(default=False)
+    
+        
+    def __str__(self):
+        return self.product.title
+    
+class Cart(models.Model):
+    user = models.OneToOneField(AUTH_USER_MODEL, on_delete=models.CASCADE)
+    articles = models.ManyToManyField(ArticleUser)
+    ordered = models.BooleanField(default=False)
+    date_added = models.DateTimeField(auto_now=True, null=True, blank=True)
+    
+    # class Meta:
+    #     ordering = ['-ordered_date']
+        
+    def __str__(self):
+        return self.user.email
     
     
     
 class Order(models.Model):
-    items = models.CharField(max_length=5000)
+    # items = models.CharField(max_length=5000)
     total = models.FloatField()
     name = models.CharField(max_length=100)
     email = models.EmailField(max_length=127)
@@ -77,6 +120,10 @@ class Order(models.Model):
     country = models.CharField(max_length=127)
     zipcode = models.CharField(max_length=127)
     date_added = models.DateTimeField(auto_now=True)
+    
+    items = models.ManyToManyField(Product)
+    qte = models.PositiveIntegerField(blank=True, null=True)
+    total_price = models.PositiveIntegerField(blank=True, null=True)
     
     def __str__(self):
         return self.name

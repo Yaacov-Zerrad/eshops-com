@@ -22,11 +22,32 @@
                 </tr>
             </thead>
             <tbody id="items-list">
+                {% for article in cart_list %}
+                <tr>
+                    <th >{{ article.product.title }}</th>
+                    <th>{{article.quantity}}</th>
+                    <th >{{ article.product.price}}</th>
+                </tr>
+                {% endfor %}
+                
+            </tbody> 
+        </table>
+
+<!-- 
+        <table class=" container px-4 px-lg-5 mt-5 table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">PRODUCT</th>
+                    <th scope="col">AMOUNT</th>
+                    <th scope="col">PRICE</th>
+                </tr>
+            </thead>
+            <tbody id="items-list">
                 
                 
                 
             </tbody> 
-        </table>
+        </table> -->
         
         
         
