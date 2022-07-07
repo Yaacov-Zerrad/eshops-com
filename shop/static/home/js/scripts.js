@@ -1,11 +1,103 @@
-/*!
-* Start Bootstrap - Shop Homepage v5.0.5 (https://startbootstrap.com/template/shop-homepage)
-* Copyright 2013-2022 Start Bootstrap
-* Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-shop-homepage/blob/master/LICENSE)
-*/
-// This file is intentionally blank
-// Use this file to add JavaScript to your project
-// panier preparation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // $("#article_form").submit(function (e) {
+        $(document).on('mouseenter', '.ted', function(e){
+        // preventing from page reload and default actions
+        e.preventDefault();
+        let id = $(this).attr('id')
+        var type= $(this).attr("data-id");
+        console.log('id:', id);
+        id = '#'+id
+
+
+
+
+        
+        // serialize the data for sending the form data.
+        // make POST ajax call
+        $(id).submit(function(e) {
+            e.preventDefault();
+            console.log('submit');
+
+
+            // AJAX for posting
+            var serializedData = $(this).serialize();
+
+        console.log("create post is working!") // sanity check
+        $.ajax({
+            // envoi les donnee ver db
+            type: 'POST',
+            url: "{% url 'shop:add_article' %}",
+            data: serializedData,
+
+            success: function (response) {
+                // on successfull creating object
+                // 1. clear the form.
+                $(id).trigger('reset');
+                // 2. focus to nickname input 
+                $("#id_title").focus();
+                console.log('succec in db');
+
+                //display the newly friend to table.
+                var instance = JSON.parse(response["instance"]);
+                var fields = instance[0]["fields"];
+                $("#my_articles tbody").prepend(
+                    `<tr>
+                    <td>${fields["title"]||""}</td>
+                    <td>${fields["quantity"]||""}</td>
+                    </tr>`
+                )
+            },
+            error: function (response) {
+                // alert the error if any error occured
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+    })
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// DONALD
+
 
 
 

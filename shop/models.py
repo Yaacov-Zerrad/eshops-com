@@ -77,11 +77,12 @@ class Product(models.Model):
         # )
         
 class Article(models.Model):
-    title = models.CharField(max_length=200)   
-    quantity = models.IntegerField()
+    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
     
     def __str__(self):
-        return self.title
+        return self.product.title
 
         
 
@@ -98,7 +99,7 @@ class ArticleUser(models.Model):
     
 class Cart(models.Model):
     user = models.OneToOneField(AUTH_USER_MODEL, on_delete=models.CASCADE)
-    articles = models.ManyToManyField(ArticleUser)
+    articles = models.ManyToManyField(Article)
     ordered = models.BooleanField(default=False)
     date_added = models.DateTimeField(auto_now=True, null=True, blank=True)
     

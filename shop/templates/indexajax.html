@@ -4,7 +4,8 @@
 
 <div class="container-fluid">
     <!-- id="article-form" -->
-    <form  method="POST" id="article_form" >
+    {% for i in list %}
+    <form  method="POST" id="form{{i}}" >
         <div class="row">
             {% csrf_token %}
             {% for field in form %}
@@ -13,34 +14,14 @@
                 {{ field }}
             </div>
             {% endfor %}
-            <input type="submit" class="btn btn-primary" value="add article" />
+            <button  type="submit" id="form{{i}}" class="ted btn btn-primary" value="" />add article</button>
         </div>
-    <form>
+    </form>
+    {% endfor %}
 </div>
 <hr />
 
-<div class="container-fluid">
-    <table class="table table-striped table-sm" id="my_articles">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>quantity</th>
 
-            </tr>
-        </thead>
-        <tbody>
-        {% for article in articles %}
-        <tr>
-            <td>{{article.title}}</td>
-            <td>{{article.quantity}}</td>
-            <!-- <td>{{friend.dob | date:"Y-m-d"}}</td> -->
-
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-</div>
 {% endblock content %}
 
 {% block js %}
@@ -54,41 +35,48 @@
 
 <script>
 
-    /*
-        On submiting the form, send the POST ajax
-        request to server and after successfull submission
-        display the object.
-    */
-    $("#article_form").submit(function (e) {
+
+var Workin = false;
+
+
+
+    // $("#article_form").submit(function (e) {
+        $(document).on('mouseenter', '.ted', function(e){
         // preventing from page reload and default actions
+        
         e.preventDefault();
-
-        console.log('form submit');
-
-
-
-// AJAX for posting
+        let id = $(this).attr('id')
+        var type= $(this).attr("data-id");
+        console.log('id:', id);
+        id = '#'+id
 
 
 
+
+        
         // serialize the data for sending the form data.
-        var serializedData = $(this).serialize();
         // make POST ajax call
+        $(id).submit(function(e) {
+            // $(this).find(':submit').attr( 'disabled','disabled' );
+            e.preventDefault();
+            var item_id = this.id.toString();
+            console.log('submit', item_id);
 
-// AJAX for posting
 
-    console.log("create post is working!") // sanity check
+            // AJAX for posting
+            var serializedData = $(this).serialize();
+
+        console.log("create post is working!") // sanity check
         $.ajax({
             // envoi les donnee ver db
             type: 'POST',
             url: "{% url 'shop:add_article' %}",
-
             data: serializedData,
 
             success: function (response) {
                 // on successfull creating object
                 // 1. clear the form.
-                $("#article_form").trigger('reset');
+                $(id).trigger('reset');
                 // 2. focus to nickname input 
                 $("#id_title").focus();
                 console.log('succec in db');
@@ -109,14 +97,7 @@
             }
         })
 
-
-    // // handle a non-successful response
-    // error : function(xhr,errmsg,err) {
-    //         $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
-    //             " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
-    //         console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-    //     }
-    // });
+    })
 
     });
 

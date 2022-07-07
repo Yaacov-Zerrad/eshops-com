@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Django Ajax</title>
+</head>
+<body>
+<h1>Django Ajax Example</h1>
+
+
+<!-- Le formulaire -->
+<form method="POST">
+    {% csrf_token %}
+    <label>Opération</label>
+    <input type="text" id="a"> + <input type="text" id="b">
+    <input type='hidden' id="c" value="aa">
+    <input id="ajax-call" type="submit" value="Calculer">
+    {% for product in products %}
+    {{ product.slug|json_script:'name' }}
+    <input id="{{ product.slug }}" value="{{ product.slug }}">{{ product.title }}</input>
+    {% endfor %}
+</form>
+<!-- Nous afficherons le résultat de l'opération ici -->
+<p id="ajax"></p>
+
+
+<script>
+document.querySelector("#ajax-call").addEventListener("click", event => {
+    event.preventDefault();
+    let formData = new FormData();
+    let item_id = event.target.id
+    console.log(item_id);
+    // trransform en string
+    formData.append('a', document.querySelector("#a").value);
+    formData.append('b', document.querySelector("#b").value);
+    var js_variable = JSON.parse(document.getElementById('name').textContent);
+    formData.append('c', js_variable);
+
+    let csrfTokenValue = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    const request = new Request('{% url "shop:add_user_article" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {'X-CSRFToken': csrfTokenValue}
+    });
+    
+    fetch(request)
+        .then(response => response.json())
+        .then(result => {
+            const resultElement = document.querySelector("#ajax");
+            resultElement.innerHTML = result["operation_result"];
+        })
+})
+
+
+</script>
+
+</body>
+</html>

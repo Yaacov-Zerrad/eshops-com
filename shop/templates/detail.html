@@ -5,12 +5,27 @@
         {% block css %}
         <!-- Core theme CSS (includes Bootstrap)-->
         <link rel="stylesheet" href="{% static 'detail/css/styles.css' %}">
+        
         {% endblock css %}
         
         {% block content %} 
 
-
+        <!-- <form  method="POST" id="form{{i}}" >
+            <div class="row">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="form-group col-4">
+                    <label class="col-12">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+                {% endfor %}
+                <button  type="submit" id="form" class="ted btn btn-primary" value="" />add the article</button>
+            </div>
+        </form> -->
         <!-- Product section-->
+        <div id='test'></div>
+
+
         <section class="py-5">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="row gx-4 gx-lg-5 align-items-center">
@@ -18,24 +33,62 @@
                     <div class="col-md-6">
                         <div class="small mb-1">SKU: BST-498</div>
                 <h1 class="display-5 fw-bolder"> {{ product.title }}</h1>
-                        <div class="fs-5 mb-5">
-                            <span class="text-decoration-line-through">$45.00</span>
+                <div class="fs-5 mb-5">
+                    <span class="text-decoration-line-through">$45.00</span>
                             <span> {{ product.price }}</span>
                         </div>
-                <p class="lead"> {{ product.description }}</p>
+                        <p class="lead"> {{ product.description }}</p>
                         <div class="d-flex">
-                            <input class="form-control text-center me-3" id="inputQuantity" type="num" value="1" style="max-width: 3rem" />
-                            <button class="btn btn-outline-dark flex-shrink-0" type="button">
-                                <i class="bi-cart-fill me-1"></i>
-                                Add to cart
-                            </button>
+                            
+                            <form  method="POST" id="form-{{product.slug}}" >
+                                <div class="row">
+                                    {% csrf_token %}
+                                    <!-- {% for field in form %}
+                                        {{ field }}            
+                                    {% endfor %} -->
+                                    <input type="hidden" name="slug" id="slug{{product.slug}}">
+                                    <script>
+                                        // for donne value in slug
+                                        var slug = '{{ product.slug }}'
+                                        document.getElementById('slug'+slug).setAttribute('value',slug);
+
+                                        // for change id in form
+                                        var form = "#form-{{product.slug}}"
+                                        </script>
+                                    <button  type="submit" id="form" class="ted btn btn-outline-dark flex-shrink-0" value="" >
+                                        <i class="bi-cart-fill me-1" ></i>
+                                        add the article
+                                    </button>
+
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+        
+        
+   <!-- for javascript variable  -->
+{{ product.title|json_script:'title' }}
+
+        
+            {% endblock content %}   
 
 
+            {% block js %}
+            <script>
+                console.log(form);
+                
+
+            </script>
+            <script src="{% static 'detail/js/ajax.js' %}"></script>
+
+
+            {% endblock js %}
+
+
+            
 
         <!-- Related items section-->
         <section class="py-5 bg-light">
@@ -142,12 +195,4 @@
                     </div>
                 </div>
             </div>
-        </section>
-
-
-            {% endblock content %}   
-
-
-            {% block js %}
-            <!-- <script src="{% static 'detail/js/scripts.js' %}"></script> -->
-            {% endblock js %}
+        </section> 

@@ -19,6 +19,11 @@ from .models import Article, ArticleUser, Cart, Product
 from django.core.paginator import Paginator
 
 
+from django.views.decorators.csrf import csrf_exempt
+
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
 
 
 def index(request):
@@ -93,8 +98,91 @@ class PermPerm(PermissionRequiredMixin, ListView):
 
 
 def detail(request, pk):
+    form = ArticleForm()
+    articles = Article.objects.all()
     product = get_object_or_404(Product, id=pk)
-    return render(request, 'detail.html', {'product': product })
+    return render(request, 'detail.html', {'product': product, 'form': form, 'articles': articles })
+
+
+def checkout(request):
+    user = request.user
+    print(user)
+    cart = get_object_or_404(Cart, user=user)
+    cart_list = cart.articles.all()
+    form = OrderForm()
+    if request.method == "POST":
+        form = OrderForm(request.POST)
+        if form.is_valid:
+            form.save()
+            form = OrderForm()
+    return render(request, 'checkout.html', {'form': form, 'cart_list':cart_list})
+
+
+def add_article(request):
+    """in ajax """
+    if request.method == "POST":
+        slug = request.POST["slug"]
+        print(slug)
+        user = request.user
+        product = get_object_or_404(Product, slug=slug)
+        cart, _ = Cart.objects.get_or_create(user=user)
+        article, created = Article.objects.get_or_create(user=user, product=product)
+        
+        if created:
+            cart.articles.add(article)
+            instance = cart.save()
+            # serialize in new friend object in json
+            ser_instance = serializers.serialize('json', [ article.product, ])
+            print(article)
+            # send to client side.
+            return JsonResponse({"instance": ser_instance}, status=200)
+        
+        if not created:
+            article.quantity +=1
+            instance = article.save()
+            
+            # serialize in new friend object in json
+            print(article.product.description)
+            ser_instance = serializers.serialize('json', [ article.product, ])
+            print(ser_instance)
+            # send to client side.
+            # return HttpResponse({"article": article.product}, status=200)
+            return JsonResponse({"instance": ser_instance}, status=200)
+        else:
+            # some form errors occured.
+            return JsonResponse({"error": "form.errors"}, status=400)
+    
+    return JsonResponse({"error": ""}, status=400) 
+
+
+def get_data_cart(request):
+    articles = Article.objects.all()
+    return JsonResponse({'articles':list(articles.values())})
+
+# from django.views.decorators.csrf import csrf_exempt
+
+# @csrf_exempt
+       
+
+
+def calcul(request):
+    products = Product.objects.all()
+    product_list = Product.objects.all()
+    return render(request, 'calcul.html' , {'products':product_list})
+
+
+def add_user_article(request):
+    """ajax sans bdd"""
+    
+    a = request.POST.get('a')
+    c = request.POST.get('c')
+    print(request.POST)
+    b = request.POST.get('b')
+    result = int(a) + int(b)
+
+
+    return JsonResponse({'operation_result': result})
+
 
 
 def add_to_cart(request, slug):
@@ -112,18 +200,13 @@ def add_to_cart(request, slug):
     return redirect('shop:index')
 
 
-def checkout(request):
-    user = request.user
-    print(user)
-    cart = get_object_or_404(Cart, user=user)
-    cart_list = cart.articles.all()
-    form = OrderForm()
-    if request.method == "POST":
-        form = OrderForm(request.POST)
-        if form.is_valid:
-            form.save()
-            form = OrderForm()
-    return render(request, 'checkout.html', {'form': form, 'cart_list':cart_list})
+
+def indexajax(request):
+    form = ArticleForm()
+    articles = Article.objects.all()
+    list = [1, 2, 3]
+    return render(request, 'indexajax.html', {'form': form, 'articles': articles, 'list': list})
+
 
 
 
@@ -133,33 +216,3 @@ def templates(request):
 
 def temdetail(request):
     return render(request, 'detail_temp.html')
-
-
-
-def indexajax(request):
-    form = ArticleForm()
-    articles = Article.objects.all()
-    return render(request, 'indexajax.html', {'form': form, 'articles': articles})
-
-def is_ajax(request):
-    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
-
-
-
-def add_article(request):
-    # verifi ajax
-    if is_ajax(request=request) and request.method == "POST":
-        form = ArticleForm(request.POST)
-        # save the data and after fetch the object in instance
-        if form.is_valid():
-            instance = form.save()
-            # serialize in new friend object in json
-            ser_instance = serializers.serialize('json', [ instance, ])
-            # send to client side.
-            return JsonResponse({"instance": ser_instance}, status=200)
-        else:
-            # some form errors occured.
-            return JsonResponse({"error": form.errors}, status=400)
-    
-    return JsonResponse({"error": ""}, status=400)        
-

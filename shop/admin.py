@@ -34,20 +34,29 @@ admin.site.register(ArticleUser)
 
 class ArticleForm(forms.ModelForm):
     
-    def __init__(self, *args, **kwargs):
-        super(ArticleForm, self).__init__(*args, **kwargs)
-        ## add a "form-control" class to each form input
-        ## for enabling bootstrap
-        for name in self.fields.keys():
-            self.fields[name].widget.attrs.update({
-                'class': 'form-control',
-            })
+    # def __init__(self, *args, **kwargs):
+    #     super(ArticleForm, self).__init__(*args, **kwargs)
+    #     ## add a "form-control" class to each form input
+    #     ## for enabling bootstrap
+    #     for name in self.fields.keys():
+    #         self.fields[name].widget.attrs.update({
+    #             # 'class': 'form-control',
+    #             'type': 'hidden'
+    #         })
+    quantity  = forms.CharField(widget=forms.HiddenInput())
+    user  = forms.CharField(widget=forms.HiddenInput())
+    product  = forms.CharField(widget=forms.HiddenInput())
     
     class Meta:
         model = Article
         fields = ("__all__")
+        # widgets={'title': forms.HiddenInput()}
+            
     
     
     
     
 admin.site.register(Article)
+
+
+
