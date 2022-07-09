@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.urls import path
-from .views import add_article,  add_user_article, get_data_cart, calcul, checkout, detail, index, indexajax,   templates, temdetail, add_to_cart
+from .views import add_article, add_product_test,  add_user_article, get_data_cart, calcul, checkout, detail, index, indexajax,   templates, temdetail, add_to_cart
 from django.conf.urls.static import static
 
 app_name='shop'
@@ -13,6 +13,8 @@ urlpatterns = [
     path("create_post", add_article, name="add_article"),
     path("get_data_cart", get_data_cart, name="get_data_cart"),
     
+    #test
+    path('add_product_test', add_product_test, name='add_product_test'),
     
     path("ajax", indexajax, name="indexajax"),
     path("ww", calcul, name="calcul"),

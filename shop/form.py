@@ -57,6 +57,19 @@ class OrderForm(forms.ModelForm):
             "id": "total",
         }
     ))
+    qte = forms.CharField( widget=forms.TextInput(
+        attrs={
+            'readonly':'readonly',
+            "class": "form-control",
+        }
+    ))
+    total_price = forms.CharField( widget=forms.TextInput(
+        attrs={
+            'readonly':'readonly',
+            "class": "form-control",
+        }
+    ))
+
     
     
     

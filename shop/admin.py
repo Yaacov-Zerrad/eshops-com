@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ArticleUser, Cart, Category, Product, Order, Article
+from .models import  Cart, Category, Product, Order, Article
 
 from django import forms
 
@@ -23,7 +23,7 @@ admin.site.register(Category, AdminCategory)
 admin.site.register(Product, AdminProduct)
 admin.site.register(Order, AdminOrder)
 admin.site.register(Cart)
-admin.site.register(ArticleUser)
+
 
 
 

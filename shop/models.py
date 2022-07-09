@@ -14,13 +14,6 @@ class Category(models.Model):
         ordering = ['-date_added']
         
         
-
-
-        
-        
-        
-        
-        
 class Product(models.Model):
     title = models.CharField(max_length=200)
     price = models.FloatField(default=0)
@@ -29,8 +22,6 @@ class Product(models.Model):
     stock = models.IntegerField(default=0)
     #  etranger key
     Category =models.ForeignKey("Category",  on_delete=models.CASCADE, related_name='category')
-    
-    #category = models.ForeignKey("Category", one_delete=models.CASCADE, related_name='categorie')
     # for image upload 
     # img = models.ImageField
     img = models.CharField(max_length=5000)
@@ -52,7 +43,7 @@ class Product(models.Model):
     #     )
     
     
-#--------------------------create new permission in term
+#--------------------------create new permission in terminal
 
 # from django.contrib.auth.models import Group, Permission
 # from django.contrib.contenttypes.models import ContentType
@@ -80,28 +71,22 @@ class Article(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
-    
-    def __str__(self):
-        return self.product.title
-
-        
-
-
-class ArticleUser(models.Model):
-    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=1)
+    total = models.FloatField()
     ordered = models.BooleanField(default=False)
     
-        
     def __str__(self):
         return self.product.title
-    
+
+        
+
+
+
 class Cart(models.Model):
     user = models.OneToOneField(AUTH_USER_MODEL, on_delete=models.CASCADE)
     articles = models.ManyToManyField(Article)
     ordered = models.BooleanField(default=False)
     date_added = models.DateTimeField(auto_now=True, null=True, blank=True)
+    total = models.FloatField()
     
     # class Meta:
     #     ordering = ['-ordered_date']
@@ -125,6 +110,8 @@ class Order(models.Model):
     items = models.ManyToManyField(Product)
     qte = models.PositiveIntegerField(blank=True, null=True)
     total_price = models.PositiveIntegerField(blank=True, null=True)
+    activate = models.BooleanField(default=True)
+    
     
     def __str__(self):
         return self.name

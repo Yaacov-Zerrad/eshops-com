@@ -10,24 +10,12 @@
         
         {% block content %} 
 
-        <!-- <form  method="POST" id="form{{i}}" >
-            <div class="row">
-                {% csrf_token %}
-                {% for field in form %}
-                <div class="form-group col-4">
-                    <label class="col-12">{{ field.label }}</label>
-                    {{ field }}
-                </div>
-                {% endfor %}
-                <button  type="submit" id="form" class="ted btn btn-primary" value="" />add the article</button>
-            </div>
-        </form> -->
-        <!-- Product section-->
-        <div id='test'></div>
-
 
         <section class="py-5">
+
+            <div id="items-list"></div>
             <div class="container px-4 px-lg-5 my-5">
+            
                 <div class="row gx-4 gx-lg-5 align-items-center">
                     <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="{{ product.img }}" alt="..." /></div>
                     <div class="col-md-6">

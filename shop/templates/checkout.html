@@ -4,10 +4,13 @@
 {% block css %}
 <!-- Core theme CSS (includes Bootstrap)-->
 <link rel="stylesheet" href="{% static 'home/css/styles.css' %}">
+
+
 {% endblock css %}
 
 
 {% block content %}
+
 <div class="container px-4 px-lg-5 mt-5" >
     <h3 class="text-center" > Your Cart</h3>
     <!-- list cart -->
@@ -21,35 +24,29 @@
                     <th scope="col">PRICE</th>
                 </tr>
             </thead>
-            <tbody id="items-list">
-                {% for article in cart_list %}
-                <tr>
-                    <th >{{ article.product.title }}</th>
-                    <th>{{article.quantity}}</th>
-                    <th >{{ article.product.price}}</th>
-                </tr>
-                {% endfor %}
-                
+            
+            <!--  for recup de ajax -->
+            <tbody id="items_listation">
+                <!-- <tr id="items-list">
+
+
+                </tr> -->
+                 
             </tbody> 
+            
+            <!-- for recup de model articles -->
+            <!-- <tbody id="items-list">
+                {% for article in cart_list %}
+            <tr>
+                <th >{{ article.product.title }}</th>
+                <th>{{article.quantity}}</th>
+                <th >{{ article.product.price}}</th>
+            </tr>
+        </tbody> 
+        {% endfor %} -->
+            
         </table>
 
-<!-- 
-        <table class=" container px-4 px-lg-5 mt-5 table table-dark table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">PRODUCT</th>
-                    <th scope="col">AMOUNT</th>
-                    <th scope="col">PRICE</th>
-                </tr>
-            </thead>
-            <tbody id="items-list">
-                
-                
-                
-            </tbody> 
-        </table> -->
-        
-        
         
         <br>
         <br>
@@ -76,11 +73,11 @@
 
 
 {% block js %}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-<script src="{% static 'home/js/scripts.js' %}"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script> -->
+<!-- <script src="{% static 'home/js/scripts.js' %}"></script> -->
 
-<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 
@@ -88,12 +85,14 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script> -->
 
 {% endblock js %}
 
+
 <script>
+refresh()
+
     
 if(localStorage.getItem('cart') == null){
     var cart = {};

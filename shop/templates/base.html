@@ -16,9 +16,16 @@
         <link rel="shortcut icon" href="#">
 
         
-        <script src="{% static 'detail/js/ajax.js' %}"></script>
-
+        
         <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <!-- <script src="{% static 'detail/js/ajax.js' %}"></script> -->
+<!-- Bootstrap core JS-->
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script src="{% static 'detail/js/ajax.js' %}"></script>
+
         {% block css %}
 
         {% endblock css %}
@@ -50,10 +57,12 @@
                         Tooltip with HTML
                       </button> -->
                       {% if user.cart %}
-                        <button type="button" class="btn btn-outline-dark" data-html="true" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Bottom popover" id="cart-popo">
+                        <button type="button" class="btn btn-outline-dark" data-html="true" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Cart list" id="cart-popo">
                             <i class="bi-cart-fill me-1"></i>
-                            <a href="{% url 'shop:checkout' %}">Cart</a>
+                            <a href="{% url 'shop:checkout' %}"></a>
+                                Cart
                             <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart">{{ user.cart.articles.count }}</span>
+                            <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart"></span>
                           </button>
                         {% endif %}
 
@@ -92,21 +101,12 @@
         <footer class="py-5 bg-dark">
             <div class="container"><p class="m-0 text-center text-white">Copyright &copy; E-shops Website 2022</p></div>
         </footer>
-        <!-- Bootstrap core JS-->
+        <!-- Bootstrap core JS
         <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>-->
+        <script src="{% static 'detail/js/ready.js' %}"></script> 
 
-
-        <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-   -->
-
-
-
-<!-- <script src="{% static 'home/js/scripts_ajax.js' %}"></script> -->
 
         {% block js %}
         
