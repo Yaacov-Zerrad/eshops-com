@@ -87,7 +87,7 @@ def login_user(request):
             messages.error(request, 'you have not confirm your account, check in your mailbox and confirm before trying again')
         else:
             messages.error(request, 'bad authentication')
-            return redirect('login')
+            return redirect('log:login')
     return render(request, 'login.html' )
 
 

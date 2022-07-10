@@ -11,7 +11,9 @@ import uuid
 def add_cart_user(sender, instance, created, *args, **kwargs):
     if created:
         instance.save()
-        Cart.objects.create(user=instance)
+        cart = Cart.objects.create(user=instance)
+        cart.save()
+        
         
         # sender 
 @receiver(m2m_changed, sender=Cart.articles.field)
@@ -38,19 +40,37 @@ def calcul_total_article(sender, instance,    *args, **kwargs):
     
 @receiver(pre_save, sender=Cart)
 def calcul_total(sender, instance,    *args, **kwargs):
-    """calcul price and qte in cart"""
-    try:
+    """calcul price and qte in cart"""  
+    qte =0
+    total_price = 0
+    #cart, _ = Cart.objects.get_or_create(user=instance.user)
+    if Cart.objects.filter(user=instance.user):
         total_price = 0
         qte = 0
         articles = instance.articles.all()
         for article in articles:
             qte +=1
-            total_price = article.total
+            total_price += article.total
         instance.qte = qte
         instance.total = total_price
-    except :
-        pass
     
+    
+
+     
+# @receiver(pre_save, sender=Cart)
+# def calcul_total(sender, instance,    *args, **kwargs):
+#     #cart, _ = Cart.objects.get_or_create(user=instance.user)
+#     """calcul price and qte in cart"""
+#     total_price = 0
+#     qte = 0
+#     articles = instance.articles.all()
+#     for article in articles:
+#         qte +=1
+#         total_price = article.total
+#     instance.qte = qte
+#     instance.total = total_price
+    
+
      
 
 
