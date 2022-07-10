@@ -55,7 +55,7 @@ def checkout(request):
     """cart and achat"""
     user = request.user
     print(user)
-    cart = get_object_or_404(Cart, user=user)
+    cart, _ = Cart.objects.get_or_create(user=user)
     cart_list = cart.articles.all()
     form = OrderForm()
     if request.method == "POST":
@@ -66,6 +66,8 @@ def checkout(request):
     return render(request, 'checkout.html', {'form': form, 'cart_list':cart_list})
 
 
+
+
 def add_article(request):
     """add article in db en ajax """
     if request.method == "POST":
@@ -74,7 +76,7 @@ def add_article(request):
         user = request.user
         product = get_object_or_404(Product, slug=slug)
         cart, _ = Cart.objects.get_or_create(user=user)
-        article, created = Article.objects.get_or_create(user=user, product=product)
+        article, created = Article.objects.get_or_create(user=user, ordered=False, product=product)
         
         if created:
             cart.articles.add(article)
@@ -106,7 +108,7 @@ def add_article(request):
 
 def get_data_cart(request):
     """get table cart in json"""
-    articles = Article.objects.all()
+    articles = Article.objects.filter(ordered=False, user=request.user)
     dictionary =  list([{'product':article.product.title, 'quantity':article.quantity}  for article in articles]  )
     # list_articles = json.dumps(dictionary, indent=4)
     # list_articles = ProductSerializer()
@@ -116,6 +118,13 @@ def get_data_cart(request):
 
     # return HttpResponse({'articles':list_articles})
     return JsonResponse({'articles':dictionary})
+
+
+def delete_cart(request):
+    if cart := request.user.cart:
+        cart.delete()
+    return redirect('index')
+
 
 
 def add_product_test(request):

@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 
 from eshops.settings import AUTH_USER_MODEL
@@ -71,8 +72,10 @@ class Article(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
-    total = models.FloatField()
+    total = models.FloatField(blank=True, null=True)
     ordered = models.BooleanField(default=False)
+    ordered_date = models.DateTimeField(null=True, blank=True)
+    
     
     def __str__(self):
         return self.product.title
@@ -84,21 +87,28 @@ class Article(models.Model):
 class Cart(models.Model):
     user = models.OneToOneField(AUTH_USER_MODEL, on_delete=models.CASCADE)
     articles = models.ManyToManyField(Article)
-    ordered = models.BooleanField(default=False)
-    date_added = models.DateTimeField(auto_now=True, null=True, blank=True)
-    total = models.FloatField()
-    
+    total = models.FloatField(blank=True, null=True)
+    qte = models.PositiveIntegerField(blank=True, null=True)
     # class Meta:
     #     ordering = ['-ordered_date']
         
     def __str__(self):
         return self.user.email
     
+    def delete(self, *args, **kwargs):
+        """save article ordered and clear cart"""
+        for article in self.articles.all():
+            print(article)
+            article.ordered =True
+            article.ordered_date = timezone.now()
+            article.save()
+        self.articles.clear()   
+        super().delete(*args, **kwargs)
+    
     
     
 class Order(models.Model):
     # items = models.CharField(max_length=5000)
-    total = models.FloatField()
     name = models.CharField(max_length=100)
     email = models.EmailField(max_length=127)
     address = models.CharField(max_length=127)
@@ -107,10 +117,11 @@ class Order(models.Model):
     zipcode = models.CharField(max_length=127)
     date_added = models.DateTimeField(auto_now=True)
     
-    items = models.ManyToManyField(Product)
+    items = models.ManyToManyField(Cart)
     qte = models.PositiveIntegerField(blank=True, null=True)
     total_price = models.PositiveIntegerField(blank=True, null=True)
     activate = models.BooleanField(default=True)
+    num_order = models.CharField(max_length=50, blank=True)
     
     
     def __str__(self):

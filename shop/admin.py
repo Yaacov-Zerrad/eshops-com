@@ -16,7 +16,7 @@ class AdminProduct(admin.ModelAdmin):
     list_editable = ( 'price',)
     
 class AdminOrder(admin.ModelAdmin):
-    list_display = ('name','total', 'city', 'country', 'date_added')
+    list_display = ('name', 'city', 'country', 'date_added')
 
 
 admin.site.register(Category, AdminCategory)
