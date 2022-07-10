@@ -1,3 +1,4 @@
+from tkinter.tix import Balloon
 from django.utils import timezone
 from django.db import models
 
@@ -115,12 +116,13 @@ class Order(models.Model):
     city = models.CharField(max_length=127)
     country = models.CharField(max_length=127)
     zipcode = models.CharField(max_length=127)
-    date_added = models.DateTimeField(auto_now=True)
+    date_added = models.DateTimeField(auto_now=True, blank=True, null=True)
     
     items = models.ManyToManyField(Cart)
     qte = models.PositiveIntegerField(blank=True, null=True)
-    total_price = models.PositiveIntegerField(blank=True, null=True)
-    activate = models.BooleanField(default=True)
+    total_price = models.PositiveIntegerField(blank=True, null=True)\
+    # achanger au payement
+    activate = models.BooleanField(default=False)
     num_order = models.CharField(max_length=50, blank=True)
     
     
@@ -130,3 +132,13 @@ class Order(models.Model):
     class Meta:
         ordering = ['-date_added']
     
+    
+    def save(self, *args, **kwargs):
+       
+    # def save(self, *args, **kwargs):
+    #     """save article ordered and clear cart"""
+    #     for item in self.items.all():    
+    #         toto += item.total
+    #     self.total_price = toto
+            
+        super().save(*args, **kwargs)

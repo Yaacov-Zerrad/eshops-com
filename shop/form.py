@@ -50,13 +50,13 @@ class OrderForm(forms.ModelForm):
         }
     ))
     
-    total = forms.CharField( widget=forms.TextInput(
-        attrs={
-            'readonly':'readonly',
-            "class": "form-control",
-            "id": "total",
-        }
-    ))
+    # total = forms.CharField( widget=forms.TextInput(
+    #     attrs={
+    #         'readonly':'readonly',
+    #         "class": "form-control",
+    #         "id": "total",
+    #     }
+    # ))
     qte = forms.CharField( widget=forms.TextInput(
         attrs={
             'readonly':'readonly',
@@ -75,13 +75,15 @@ class OrderForm(forms.ModelForm):
     
     class Meta:
         model = Order
-        fields = ( '__all__'
-                    # 'name',
-                    # 'email',
-                    # 'address' ,
-                    # 'city' ,
-                    # 'country' ,
-                    # 'zipcode' 
+        fields = ( #'__all__'
+                    'name',
+                    'email',
+                    'address' ,
+                    'city' ,
+                    'country' ,
+                    'zipcode',
+                    'qte',
+                    'total_price'
                     )
         
         widgets={'items': forms.HiddenInput()}

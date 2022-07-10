@@ -81,11 +81,6 @@ def calcul_total(sender, instance,    *args, **kwargs):
 #     obj.amount = instance.total_price
 #     obj.save()
     
-@receiver(post_save, sender=Order)
-def create_num_order(sender, instance, created,  **kwargs):
-    if instance.num_order == "":
-        instance.num_order = str(uuid.uuid4()).replace('-','').upper()[:10]
-        instance.save()
         
 @receiver(m2m_changed, sender=Order)
 def pre_delete_orders(sender, instance, action,   **kwarg):
@@ -100,14 +95,25 @@ def pre_delete_orders(sender, instance, action,   **kwarg):
     # obj.save()
     
     
-# @receiver(pre_delete, sender=Order)
-# def pre_delete_orders(sender, instance,  **kwarg):
-#     """deactivate cart if order"""
-#     obj = instance.items
-#     obj.ordered = True
-#     obj.save()  
-    
-    
+@receiver(m2m_changed, sender=Order)
+def orders(sender, instance,   **kwarg):
+    toto = 0
+    qte = 0
+    for item in instance.items.all():
+        toto += item.total  
+    instance.total_price = toto
+    instance.qte = item.qte
+    if instance.num_order == "":
+        instance.num_order = str(uuid.uuid4()).replace('-','').upper()[:10]
+        instance.save()
+
+@receiver(post_save, sender=Order)
+def clear_cart(sender, instance, created, *args, **kwargs):
+    if created:
+        instance.items.all().delete()
+            
+
+
 # @receiver(post_save, sender=Cart)
 # def pre_total_cart(sender, instance,  **kwarg):
 #     """total in cart"""

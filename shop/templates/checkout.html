@@ -63,6 +63,9 @@
             {% csrf_token %}
             {{ form.as_p }}
             <input type="hidden" id="items" name="items" >
+            <script>
+                $('#id_total_price').val(1234)
+            </script>
             <button type="submit" class="btn btn-dark">Order</button>
         </form>
     </div>
