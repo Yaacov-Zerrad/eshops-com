@@ -65,6 +65,11 @@ INSTALLED_APPS = [
 
 AUTH_USER_MODEL = 'customuser.User'
 
+# for stripe
+STRIPE_PUBLIC_KEY = "pk_test_1234"
+STRIPE_SECRET_KEY = "sk_test_1234"
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
