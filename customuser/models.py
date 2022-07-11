@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth import get_user_model
+
 # Create your models here.
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.models import Group, Permission 
@@ -115,5 +117,18 @@ class User(AbstractBaseUser):
     def is_admin(self):
         "L'utilisateur est-il un membre administrateur?"
         return self.admin
-
-
+    
+Userr = get_user_model()
+class Address(models.Model):
+    user = models.ManyToManyField(Userr)
+    name = models.CharField(max_length=100)
+    address = models.CharField(max_length=127)
+    city = models.CharField(max_length=127)
+    country = models.CharField(max_length=127)
+    zipcode = models.CharField(max_length=127)
+    phone = models.CharField(max_length=20, blank=True)
+    default = models.BooleanField(default=True)
+    
+    def __str__(self):
+        return self.name
+    

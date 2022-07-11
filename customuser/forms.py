@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
+from customuser.models import Address
+
 User = get_user_model()
 
 class RegisterForm(forms.ModelForm):
@@ -86,3 +88,21 @@ class UserAdminChangeForm(forms.ModelForm):
             # Cela se fait ici, plutôt que sur le terrain, car le
             # le champ n'a pas accès à la valeur initiale
             return self.initial["password"]
+
+
+# class MyAddressForm(forms.ModelForm):
+#     def __iter__(self):
+#       for item in self.items.all():
+#          yield item
+#     # def __init__(self, *args, **kwargs):
+#     #     super(MyAddressForm, self).__init__(*args, **kwargs)
+#     #     ## add a "form-control" class to each form input
+#     #     ## for enabling bootstrap
+#     #     for name in self.fields.keys():
+#     #         self.fields[name].widget.attrs.update({
+#     #             'class': 'form-control'
+#     #             # 'type': 'hidden'
+#     #         })
+#     class Meta:
+#         model = Address
+#         fields = ("__all__")

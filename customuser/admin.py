@@ -8,6 +8,7 @@ from customuser.models import UserManager
 
 from .forms import UserAdminCreationForm, UserAdminChangeForm
 
+from .models import Address
 User = get_user_model()
 
 # Supprimer le modèle de groupe de l'administrateur. Nous ne l'utilisons pas.
@@ -44,3 +45,4 @@ class UserAdmin(BaseUserAdmin):
 
 
 admin.site.register(User, UserAdmin)
+admin.site.register(Address)

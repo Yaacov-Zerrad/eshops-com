@@ -47,19 +47,23 @@
             
         </table>
 
-        
+        <!-- for paypal -->
+        <a role="button" href="{% url 'check:deliverychoices' %}" class="btn btn-success" type="button">Checkout securily</a>
+
+
+<!--         
         <br>
         <br>
             <br>
             <h4>Your information: </h4>
-            <br>
+            <br> -->
 
             
            
             
             <!-- <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"> -->
 
-        <form action="" method="post">
+        <!-- <form action="" method="post">
             {% csrf_token %}
             {{ form.as_p }}
             <input type="hidden" id="items" name="items" >
@@ -69,7 +73,7 @@
             <button type="submit" class="btn btn-dark">Order</button>
         </form>
     </div>
-        
+         -->
 
 <!-- </div> -->
 {% endblock content %}
