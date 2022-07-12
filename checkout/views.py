@@ -1,3 +1,4 @@
+import json
 from turtle import update
 from urllib import response
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -6,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from customuser.models import Address
 
-from shop.models import Cart
+from shop.models import Cart, Order
 
 from .models import DeliveryOptions
 
@@ -46,6 +47,16 @@ def cart_update_delivery(request):
             session['delivery']['delivery_id'] = delivery_type.id
             session.modified =True
             
+        if 'price' not in request.session:
+            session['price'] = {
+                'total': update_total_price,
+                'delivery_price': delivery_price
+            }
+        else:
+            session['price']['total'] = update_total_price
+            session['price']['delivery_price'] = delivery_price
+            session.modified =True
+        
         response = JsonResponse({'total': update_total_price, 'delivery_price': delivery_price })
         return response
     
@@ -74,12 +85,57 @@ def delivery_address(request):
 
 @login_required
 def payment_selection(request):
-    if 'delivery' not in request.session:
+    session = request.session
+    price = session['price']
+    print(session['delivery'])
+    if 'address' not in request.session:
         messages.success(request, 'Please select address option')
         # meta ... capture de l url (on peut faire ca pour revenir ou faire des condition ca depant d ou on vien)
         return HttpResponseRedirect(request.META['HTTP_REFERER'])
     
+    return render(request, 'checkout/payment_selection.html', {'price':price})
+
+
+from paypalcheckoutsdk.orders import OrdersGetRequest
+
+from .paypal import PayPalClient
+# on peut tou faire en recuperent leur inform depui leur log capture
+
+
+@login_required
+def payment_complete(request):
+    PPClient = PayPalClient()
+    print('asd', PPClient)
+    body = json.loads(request.body)
+    data = body['orderID']
+    user_id = request.user.id
+    requestorder =  OrdersGetRequest(data)
+    response = PPClient.client.execute(requestorder)
     
+    # total_paid = response.result.purchase_units[0].amount.value
     
+    # cart = Cart.objects.get(user=request.user, ordered=False,)
+    # order = Order.objects.create(
+    #     name =  response.result.purchase_units[0].shipping.name.full_name,
+    #     email = response.result.payer.email_address,
+    #     address = response.result.purchase_units[0].shipping.address.address_line_1,
+    #     city = response.result.purchase_units[0].shipping.address.country_code,
+    #     country = response.result.purchase_units[0].shipping.address.country_code,
+    #     zipcode = response.result.purchase_units[0].shipping.address.postal_code,
+    #     items = cart,
+    #     qte = cart.qte,
+    #     total_price = total_paid,
+    #     # achanger au payement
+    #     activate =  True,
+    #     num_order = response.result.id,
+    # )
+    # cart.delete()
     
-    return render(request, 'checkout/payment_selection.html', {})
+    return JsonResponse('Payment completed', safe=False)
+
+
+@login_required
+def payment_successful(request):
+    return HttpResponse('marche')
+
+

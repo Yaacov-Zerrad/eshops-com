@@ -116,7 +116,7 @@ class Order(models.Model):
     city = models.CharField(max_length=127)
     country = models.CharField(max_length=127)
     zipcode = models.CharField(max_length=127)
-    date_added = models.DateTimeField(auto_now=True, blank=True, null=True)
+    date_added = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     
     items = models.ManyToManyField(Cart)
     qte = models.PositiveIntegerField(blank=True, null=True)
@@ -124,6 +124,7 @@ class Order(models.Model):
     # achanger au payement
     activate = models.BooleanField(default=False)
     num_order = models.CharField(max_length=50, blank=True)
+    payment_option = models.CharField(max_length=200, blank=True)
     
     
     def __str__(self):

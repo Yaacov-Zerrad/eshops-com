@@ -42,7 +42,7 @@ if (typeof form !== 'undefined'){
                     
                     
                     success: function (response) {
-            refresh()
+            // refresh()---------------------------------------------------------------------------
             // on successfull creating object
             // 1. clear the form.
             // $('#form').trigger('reset');

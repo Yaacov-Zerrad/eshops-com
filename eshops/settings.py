@@ -34,6 +34,18 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIRS = os.path.join(BASE_DIR, 'templates')
 
+
+# for paypal
+SECURE_CROSS_ORIGIN_OPENER_POLICY='unsafe-none'
+# SECURE_CONTENT_TYPE_NOSNIFF ='unsafe-none'
+# SECURE_CROSS_ORIGIN_OPENER_POLICY ='unsafe-none'
+# SECURE_HSTS_INCLUDE_SUBDOMAINS='unsafe-none'
+# SECURE_HSTS_PRELOAD='unsafe-none'
+# SECURE_HSTS_SECONDS='unsafe-none'
+# SECURE_REDIRECT_EXEMPT='unsafe-none'
+# SECURE_REFERRER_POLICY='unsafe-none'
+# SECURE_SSL_HOST='unsafe-none'
+# SECURE_SSL_REDIRECT='unsafe-none'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 

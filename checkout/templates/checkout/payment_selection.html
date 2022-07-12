@@ -7,112 +7,79 @@
 
 
 
-<div class="container">       
-    
+<div class="container">
   <div class="col-12">
-    <h1 class="h2">Delivery Address</h1>
+    <h1 class="h2">Delivery Options {{ price.total}}</h1>
   </div>
   <div class="col-12">
-    <p>Please select your delivery address</p>
+    <p>Please select your delivery option</p>
   </div>
   <hr />
 </div>
-    <div class="container">
-          <div class="row g-3">
-            {% if addresses|length == 0 %}
-            <div class="col-12">There are no delivery addresses, <a href="">add address</a></div>
-            {% else %}
-            <div class="col-md-4 col-lg-4 order-md-last p-0 order-3">
-              <div class="d-flex bd-highlight ms-0">
-                <div class="p-2 flex-grow-1 bd-highlight">Sub Total:</div>
-                <div class="p-2 bd-highlight"><span class="fw-bold h5">$ </span><span id="sub_total"
-                    class="fw-bold h5">{{ total }}</span></div>
-              </div>
-              <div class="d-flex bd-highlight">
-                <div class="p-2 flex-grow-1 bd-highlight">Delivery Cost:</div>
-                <div class="p-2 bd-highlight"><span class="fw-bold h5">$ </span><span id="delivery_price"
-                    class="fw-bold h5">{{cart.get_delivery_price}}</span></div>
-              </div>
-              <div class="d-flex bd-highlight">
-                <div class="p-2 flex-grow-1 bd-highlight">Total:</div>
-                <div class="p-2 bd-highlight"><span class="fw-bold h5">$ {{ total }}</span><span id="total"
-                    class="fw-bold h5">{{ cart.total }}</span></div>
-              </div>
-              <a role="button" href="{% url 'check:payment_selection' %}" class="btn btn-success fw-bold w-100" type="button">Pay Securely</a>
-              </div>
-    
-              <div class="col-md-7 col-lg-8">
-              {% for address in addresses %}
-              {% if not address.default %}
-                <h1 class="h5 pt-4">Other Addresses</h1>
-              {% endif %}
-              <div class="card mb-3 border-1 rounded-0 product-item me-md-4" data-index="{{option.id}}">
-                <div class="row g-0">
-                  <div class="col">
-                    <div class="card pb-3 rounded-0">
-                    <div class="card-header bg-white small text-muted">
-                      {% if address.default %}
-                      Selected
-                      {% endif %}
-                      &nbsp;
-                    </div>
-                    <div class="card-body small pb-1">
-                      <p class="card-text m-0 fw-bold">{{address.name}}</p>
-                      <p class="card-text m-0">{{address.address}}</p>
-                      <p class="card-text m-0">{{address.city}}</p>
-                      <p class="card-text m-0">{{address.town_city}}</p>
-                      <p class="card-text m-0">{{address.country}}</p>
-                      <p class="card-text m-0">{{address.zipcode}}</p>
-                      <p class="card-text m-0">Phone number: {{address.phone}}</p>
-                      <div class="pt-5">
-                        <a href="" class="text-decoration-none">Edit</a>
-                        {% if not address.default %}
-                    | <a href="" class="text-decoration-none">Select</a>
-                    {% endif %}
-                  </div>
-              </div>
-            </div>
-            </a>
-          </div>
-        </div>
+
+<div class="container">
+  <div class="row g-3">
+    <div class="col-md-4 col-lg-4 order-md-last p-0 order-3">
+      <div class="d-flex bd-highlight ms-0">
+        <div class="p-2 flex-grow-1 bd-highlight">Sub Total:</div>
+        <div class="p-2 bd-highlight"><span class="fw-bold h5">£</span><span id="sub_total"
+            class="fw-bold h5">{{basket.get_subtotal_price}}</span></div>
       </div>
-              {% endfor %}
-            </div>
-            {% endif %}
-          </div>
-        </div>
-       
+      <div class="d-flex bd-highlight">
+        <div class="p-2 flex-grow-1 bd-highlight">Delivery Cost:</div>
+        <div class="p-2 bd-highlight"><span class="fw-bold h5">£</span><span id="delivery_price"
+            class="fw-bold h5">{{basket.get_delivery_price}}</span></div>
+      </div>
+      <div class="d-flex bd-highlight">
+        <div class="p-2 flex-grow-1 bd-highlight">Total:</div>
+        <div class="p-2 bd-highlight"><span class="fw-bold h5">£</span><span id="total"
+            class="fw-bold h5">{{basket.get_total_price}}</span></div>
+      </div>
+    </div>
+    {% csrf_token %}
+
+    <div class="col-md-7 col-lg-8 pe-0 pe-md-5">
+      <!-- Replace "test" with your own sandbox Business account app client ID -->
+      <script src="https://www.paypal.com/sdk/js?client-id=Aeo7slrixySBdhBZgzMUfLTdwD1ZQOaEuSCPW8Hxv8pRbouwIsgXdaNABmt_sKLypHcWPNf-pxQfa4-c&currency=USD"></script>
+    <!-- Set up a container element for the button -->
+    <div id="paypal-button-container"></div>
+    <script>
+      paypal.Buttons({
+        // Sets up the transaction when a payment button is clicked
+        createOrder: (data, actions) => {
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: '{{price.total}}' // Can also reference a variable or function
+              }
+            }]
+          });
+        },
+        // Finalize the transaction after payer approval
+        onApprove: (data, actions) => {
+          return actions.order.capture().then(function(orderData) {
+            // Successful capture! For dev/demo purposes:
+            console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+            const transaction = orderData.purchase_units[0].payments.captures[0];
+            alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+            // When ready to go live, remove the alert and show a success message within this page. For example:
+            // const element = document.getElementById('paypal-button-container');
+            // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+            // Or go to another URL:  actions.redirect('thank_you.html');
+          });
+        }
+      }).render('#paypal-button-container');
+    </script>
 
 
-
-
-
-
+    </div>
+  </div>
+</div>
 
 
 {% endblock content %}   
 
 {% block js %}
-<script>
-    $('input[type=radio][name=deliveryOption]').on('change', function(e) {
-      e.preventDefault();
-      $.ajax({
-        type: "POST",
-        url: '{% url "check:cart_update_delivery" %}',
-        data: {
-          deliveryoption: $(this).val(),
-          csrfmiddlewaretoken: "{{csrf_token}}",
-          action: "post",
-        },
-        success: function (json) {
-          document.getElementById("total").innerHTML = json.total;
-          document.getElementById("delivery_price").innerHTML = json.delivery_price;
-        },
-        error: function (xhr, errmsg, err) {},
-      });
-      
-    });
-    document.getElementById("total").innerHTML = json.total;
-    document.getElementById("delivery_price").innerHTML = json.delivery_price;
-  </script>
+
+
 {% endblock js %}
