@@ -110,6 +110,7 @@ class Cart(models.Model):
     
 class Order(models.Model):
     # items = models.CharField(max_length=5000)
+    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     email = models.EmailField(max_length=127)
     address = models.CharField(max_length=127)
@@ -120,7 +121,7 @@ class Order(models.Model):
     
     items = models.ManyToManyField(Cart)
     qte = models.PositiveIntegerField(blank=True, null=True)
-    total_price = models.FloatField(blank=True, null=True)\
+    total_price = models.FloatField(blank=True, null=True)
     # achanger au payement
     activate = models.BooleanField(default=False)
     num_order = models.CharField(max_length=50, blank=True)

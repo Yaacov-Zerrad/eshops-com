@@ -26,17 +26,17 @@
               <div class="d-flex bd-highlight ms-0">
                 <div class="p-2 flex-grow-1 bd-highlight">Sub Total:</div>
                 <div class="p-2 bd-highlight"><span class="fw-bold h5">$ </span><span id="sub_total"
-                    class="fw-bold h5">{{ total }}</span></div>
+                    class="fw-bold h5">{{ price.total }}</span></div>
               </div>
               <div class="d-flex bd-highlight">
                 <div class="p-2 flex-grow-1 bd-highlight">Delivery Cost:</div>
                 <div class="p-2 bd-highlight"><span class="fw-bold h5">$ </span><span id="delivery_price"
-                    class="fw-bold h5">{{cart.get_delivery_price}}</span></div>
+                    class="fw-bold h5">{{ price.delivery_price}}</span></div>
               </div>
               <div class="d-flex bd-highlight">
                 <div class="p-2 flex-grow-1 bd-highlight">Total:</div>
                 <div class="p-2 bd-highlight"><span class="fw-bold h5">$ {{ total }}</span><span id="total"
-                    class="fw-bold h5">{{ cart.total }}</span></div>
+                    class="fw-bold h5">{{ price.total}}</span></div>
               </div>
               <a role="button" href="{% url 'check:payment_selection' %}" class="btn btn-success fw-bold w-100" type="button">Pay Securely</a>
               </div>

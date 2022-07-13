@@ -64,7 +64,8 @@ def cart_update_delivery(request):
 @login_required
 def delivery_address(request):
     session = request.session
-    cart = Cart.objects.get(user=request.user)
+    price = session['price']
+    
     if 'delivery' not in session:
         messages.success(request, 'Please select delivery options')
         # meta ... capture de l url (on peut faire ca pour revenir ou faire des condition ca depant d ou on vien)
@@ -80,7 +81,7 @@ def delivery_address(request):
         session['address']['address_id'] = str(addresses[0].id)
         session.modified =True
     
-    return render(request, 'checkout/delivery_address.html', {'addresses':addresses, 'total':cart.total})
+    return render(request, 'checkout/delivery_address.html', {'price':price, 'addresses':addresses})
 
 
 @login_required
@@ -104,20 +105,13 @@ from .paypal import PayPalClient
 body = ''
 @login_required
 def payment_complete(request):
-    # print('PAYEMENT', request.POST)
-    # PPClient = PayPalClient()
-    # print('asd', PPClient)
-    # data = body['orderID']
     body = json.loads(request.body)
-    # print('body',body)
-    # print('heaqder',request.headers)
+    user = request.user
     user_id = request.user.id
-    # print('purchase_units',body['purchase_units'][0])
+
     purchase_units = body['purchase_units'][0]
-    print(purchase_units)
-    # requestorder =  OrdersGetRequest(data)
-    # response = PPClient.client.execute(requestorder)
-    
+
+
     total_price =purchase_units['amount']['value']
     total_price = float(total_price)
     name =purchase_units['shipping']['name']['full_name']
@@ -127,19 +121,14 @@ def payment_complete(request):
     country =purchase_units['shipping']['address']['country_code']
     zipcode =purchase_units['shipping']['address']['postal_code']
     num_order = body['id']
-    # email = body["email_address"]
-    # name = purchase_units.shipping.name.full_name
-    #     city = response.result.purchase_units[0].shipping.address.country_code,
-    #     country = response.result.purchase_units[0].shipping.address.country_code,
-    #     zipcode = response.result.purchase_units[0].shipping.address.postal_code,
+
     print( total_price, name, city, zipcode, address, email, num_order)
-    # print(body[ 'payer']['email_address'])
-    # #     email = response.result.payer.email_address,
-    # address = purchase_units.shipping.address.address_line_1
+
     
     cart = Cart.objects.get(user=request.user)
     print(cart)
     order = Order.objects.create(
+        user = user,
         name =purchase_units['shipping']['name']['full_name'],
         address =purchase_units['shipping']['address']['address_line_1'],
         email = body[ 'payer']['email_address'],
@@ -155,11 +144,14 @@ def payment_complete(request):
     # cart.delete()
     order.items.add(cart)
     order.save()
+    
+
     return JsonResponse('Payment completed', safe=False)
 
 
 @login_required
 def payment_successful(request):
+        # cart.delete()
     return HttpResponse('marche')
 
 
