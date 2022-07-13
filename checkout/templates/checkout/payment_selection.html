@@ -40,10 +40,75 @@
 
     <div class="col-md-7 col-lg-8 pe-0 pe-md-5">
       <!-- Replace "test" with your own sandbox Business account app client ID -->
-      <script src="https://www.paypal.com/sdk/js?client-id=Aeo7slrixySBdhBZgzMUfLTdwD1ZQOaEuSCPW8Hxv8pRbouwIsgXdaNABmt_sKLypHcWPNf-pxQfa4-c&currency=USD"></script>
+      <script src="https://www.paypal.com/sdk/js?client-id=Aeo7slrixySBdhBZgzMUfLTdwD1ZQOaEuSCPW8Hxv8pRbouwIsgXdaNABmt_sKLypHcWPNf-pxQfa4-c"></script>
     <!-- Set up a container element for the button -->
     <div id="paypal-button-container"></div>
-    <script>
+
+    <!-- <script>
+      function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+          var cookies = document.cookie.split(';');
+          for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+      var csrftoken = getCookie('csrftoken');
+    
+    
+    
+      function initPayPalButton() {
+        paypal.Buttons({
+          style: {
+            shape: 'rect',
+            color: 'gold',
+            layout: 'vertical',
+            label: 'paypal',
+    
+          },
+        createOrder: function (data, actions) {
+            return actions.order.create({
+              purchase_units: [{
+                "amount": {
+                  "currency_code": "USD",
+                  "value": '{{price.total}}'
+                }
+              }]
+            });
+          },
+        onApprove: function (data) {
+            var url = "{% url 'check:payment_complete' %}"
+            return fetch(url, {
+              method: 'POST',
+              headers: {
+                'content-type': 'application/json',
+                'X-CSRFToken': csrftoken,
+              },
+              body: JSON.stringify({
+                orderID: data.orderID
+              })
+            }).then(function () {
+              alert('success');
+            console.log();
+            })
+          },
+        }).render('#paypal-button-container');
+      }
+      initPayPalButton();
+    
+        </script> -->
+
+
+
+
+
+    <!-- <script>
       paypal.Buttons({
         // Sets up the transaction when a payment button is clicked
         createOrder: (data, actions) => {
@@ -60,6 +125,9 @@
           return actions.order.capture().then(function(orderData) {
             // Successful capture! For dev/demo purposes:
             console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+            var Capture_result =  orderData;
+            var capture_json = JSON.stringify(orderData, null, 2)
+            console.log(capture_json);
             const transaction = orderData.purchase_units[0].payments.captures[0];
             alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
             // When ready to go live, remove the alert and show a success message within this page. For example:
@@ -69,6 +137,76 @@
           });
         }
       }).render('#paypal-button-container');
+    </script> -->
+    <script>
+      paypal.Buttons({
+        // Sets up the transaction when a payment button is clicked
+        createOrder: (data, actions) => {
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: '05.00' // Can also reference a variable or function
+              }
+            }]
+          });
+        },
+        // Finalize the transaction after payer approval
+        onApprove: (data, actions) => {
+          return actions.order.capture().then(function(orderData) {
+            // Successful capture! For dev/demo purposes:
+            // console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+            var Capture_result =  orderData;
+            var capture_json = JSON.stringify(orderData, null, 2)
+            console.log(capture_json);
+            send(capture_json);
+            const transaction = orderData.purchase_units[0].payments.captures[0];
+            alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+            // When ready to go live, remove the alert and show a success message within this page. For example:
+            // const element = document.getElementById('paypal-button-container');
+            // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+            // Or go to another URL:  actions.redirect('thank_you.html');
+
+
+            
+    
+
+
+
+          });
+        }
+      }).render('#paypal-button-container');
+
+
+      function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+  var csrftoken = getCookie('csrftoken');
+
+
+    function send(data) {
+    const request = new XMLHttpRequest();
+    request.open('POST', "{% url 'check:payment_complete' %}");
+    request.setRequestHeader('Content-Type', 'application/json');
+    request.setRequestHeader('X-CSRFToken', csrftoken);
+    request.send(data);
+    // result.innerHTML = request.responseText.postData.text;
+}
+ 
+// form.addEventListener('click', (event) => {
+//     send();
+//     event.preventDefault();
+// });
     </script>
 
 

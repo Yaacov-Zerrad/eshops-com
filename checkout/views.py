@@ -101,36 +101,60 @@ from paypalcheckoutsdk.orders import OrdersGetRequest
 from .paypal import PayPalClient
 # on peut tou faire en recuperent leur inform depui leur log capture
 
-
+body = ''
 @login_required
 def payment_complete(request):
-    PPClient = PayPalClient()
-    print('asd', PPClient)
+    # print('PAYEMENT', request.POST)
+    # PPClient = PayPalClient()
+    # print('asd', PPClient)
+    # data = body['orderID']
     body = json.loads(request.body)
-    data = body['orderID']
+    # print('body',body)
+    # print('heaqder',request.headers)
     user_id = request.user.id
-    requestorder =  OrdersGetRequest(data)
-    response = PPClient.client.execute(requestorder)
+    # print('purchase_units',body['purchase_units'][0])
+    purchase_units = body['purchase_units'][0]
+    print(purchase_units)
+    # requestorder =  OrdersGetRequest(data)
+    # response = PPClient.client.execute(requestorder)
     
-    # total_paid = response.result.purchase_units[0].amount.value
-    
-    # cart = Cart.objects.get(user=request.user, ordered=False,)
-    # order = Order.objects.create(
-    #     name =  response.result.purchase_units[0].shipping.name.full_name,
-    #     email = response.result.payer.email_address,
-    #     address = response.result.purchase_units[0].shipping.address.address_line_1,
+    total_price =purchase_units['amount']['value']
+    total_price = float(total_price)
+    name =purchase_units['shipping']['name']['full_name']
+    address =purchase_units['shipping']['address']['address_line_1']
+    email = body[ 'payer']['email_address']
+    city =purchase_units['shipping']['address']['country_code']
+    country =purchase_units['shipping']['address']['country_code']
+    zipcode =purchase_units['shipping']['address']['postal_code']
+    num_order = body['id']
+    # email = body["email_address"]
+    # name = purchase_units.shipping.name.full_name
     #     city = response.result.purchase_units[0].shipping.address.country_code,
     #     country = response.result.purchase_units[0].shipping.address.country_code,
     #     zipcode = response.result.purchase_units[0].shipping.address.postal_code,
-    #     items = cart,
-    #     qte = cart.qte,
-    #     total_price = total_paid,
-    #     # achanger au payement
-    #     activate =  True,
-    #     num_order = response.result.id,
-    # )
-    # cart.delete()
+    print( total_price, name, city, zipcode, address, email, num_order)
+    # print(body[ 'payer']['email_address'])
+    # #     email = response.result.payer.email_address,
+    # address = purchase_units.shipping.address.address_line_1
     
+    cart = Cart.objects.get(user=request.user)
+    print(cart)
+    order = Order.objects.create(
+        name =purchase_units['shipping']['name']['full_name'],
+        address =purchase_units['shipping']['address']['address_line_1'],
+        email = body[ 'payer']['email_address'],
+        city =purchase_units['shipping']['address']['country_code'],
+        country =purchase_units['shipping']['address']['country_code'],
+        zipcode =purchase_units['shipping']['address']['postal_code'],
+        total_price =purchase_units['amount']['value'],
+        qte = cart.qte,
+    #     # achanger au payement
+        activate =  True,
+        num_order = body['id'],
+        )
+    # cart.delete()
+    order.items.add(cart)
+    order.save()
     return JsonResponse('Payment completed', safe=False)
 
 

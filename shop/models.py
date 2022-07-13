@@ -120,7 +120,7 @@ class Order(models.Model):
     
     items = models.ManyToManyField(Cart)
     qte = models.PositiveIntegerField(blank=True, null=True)
-    total_price = models.PositiveIntegerField(blank=True, null=True)\
+    total_price = models.FloatField(blank=True, null=True)\
     # achanger au payement
     activate = models.BooleanField(default=False)
     num_order = models.CharField(max_length=50, blank=True)
