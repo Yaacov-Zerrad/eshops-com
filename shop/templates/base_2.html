@@ -57,9 +57,9 @@
                     <!-- <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-html="true" title="<em>Tooltip</em> <u>with</u> <b>HTML</b>">
                         Tooltip with HTML
                       </button> -->
+                      {% if user.is_authenticated %}
                       {% if user.cart %}
                         <button type="button" class="btn btn-outline-dark" data-html="true" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Cart list" id="cart-popo">
-                            {% if user.is_authenticated %}
                             <i class="bi-cart-fill me-1"></i>
                             <a href="{% url 'shop:checkout' %}"></a>
                                 Cart
