@@ -14,40 +14,13 @@ from pathlib import Path
 import os
 
 
-# for utilis force_text in email send
-from .info import *
-import django 
-from django.utils.encoding import force_str
-django.utils.encoding.force_text = force_str
 
-# for emil send
-EMAIL_USE_TLS = EMAIL_USE_TLS
-EMAIL_HOST = EMAIL_HOST
-EMAIL_HOST_USER = EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD
-EMAIL_PORT = EMAIL_PORT
-# for heroku
-import django_heroku
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIRS = os.path.join(BASE_DIR, 'templates')
 
 
-# for paypal
-SECURE_CROSS_ORIGIN_OPENER_POLICY='unsafe-none'
-# SECURE_CONTENT_TYPE_NOSNIFF ='unsafe-none'
-# SECURE_CROSS_ORIGIN_OPENER_POLICY ='unsafe-none'
-# SECURE_HSTS_INCLUDE_SUBDOMAINS='unsafe-none'
-# SECURE_HSTS_PRELOAD='unsafe-none'
-# SECURE_HSTS_SECONDS='unsafe-none'
-# SECURE_REDIRECT_EXEMPT='unsafe-none'
-# SECURE_REFERRER_POLICY='unsafe-none'
-# SECURE_SSL_HOST='unsafe-none'
-# SECURE_SSL_REDIRECT='unsafe-none'
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-pt(1_&ewgylwd%3$$#_6wmg4wb%n!zdggwbs1e61+5m3+#ddl0'
@@ -55,11 +28,8 @@ SECRET_KEY = 'django-insecure-pt(1_&ewgylwd%3$$#_6wmg4wb%n!zdggwbs1e61+5m3+#ddl0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# for my site heroku
-ALLOWED_HOSTS = ['https://yayoportfolio.herokuapp.com/', '127.0.0.1']
 
 
-# for user perso
 
 
 # Application definition
@@ -74,11 +44,11 @@ INSTALLED_APPS = [
     'customuser',
     'log',
     'checkout',
+    'basket',
 ]
 
-AUTH_USER_MODEL = 'customuser.User'
 
-# for stripe
+
 
 
 
@@ -95,8 +65,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'eshops.urls'
-# for heroku
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 TEMPLATES = [
     {
@@ -191,5 +159,58 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticsfiles')
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# for utilis force_text in email send
+from .info import *
+import django 
+from django.utils.encoding import force_str
+django.utils.encoding.force_text = force_str
+
+# for emil send
+EMAIL_USE_TLS = EMAIL_USE_TLS
+EMAIL_HOST = EMAIL_HOST
+EMAIL_HOST_USER = EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD
+EMAIL_PORT = EMAIL_PORT
+
+
+
+
 # for heroku
+import django_heroku
+import dj_database_url
 django_heroku.settings(locals())
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# for my site and heroku
+ALLOWED_HOSTS = ['https://yayoportfolio.herokuapp.com/', '127.0.0.1']
+
+#basket 
+BASKET_SESSION_ID = 'basket'
+
+
+
+
+# for paypal
+SECURE_CROSS_ORIGIN_OPENER_POLICY='unsafe-none'
+# SECURE_CONTENT_TYPE_NOSNIFF ='unsafe-none'
+# SECURE_CROSS_ORIGIN_OPENER_POLICY ='unsafe-none'
+# SECURE_HSTS_INCLUDE_SUBDOMAINS='unsafe-none'
+# SECURE_HSTS_PRELOAD='unsafe-none'
+# SECURE_HSTS_SECONDS='unsafe-none'
+# SECURE_REDIRECT_EXEMPT='unsafe-none'
+# SECURE_REFERRER_POLICY='unsafe-none'
+# SECURE_SSL_HOST='unsafe-none'
+# SECURE_SSL_REDIRECT='unsafe-none'
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
+
+
+# for user perso
+AUTH_USER_MODEL = 'customuser.User'
+
+
+
+
+
+
+

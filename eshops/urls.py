@@ -24,6 +24,7 @@ urlpatterns = [
     #path('', index , name='index'),
     path('log/', include('log.urls')), 
     path('check/', include('checkout.urls')), 
+    path('basket/', include('basket.urls')), 
     path('', include('shop.urls')),
 ]
 
