@@ -1,9 +1,282 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 
 
-{{ basket }}
+
+
+<div class="container">       
+    
+  <div class="col-12">
+      <h2>Delivery options</h2>
+  </div>
+  <div class="col-12">
+      <p>Select your delivery options</p>
+  </div>
+  <hr />
+  <div class="container">
+{% if messages %}
+      <div class="alert alert-warning" alert-{{ message.tags }} role="alert">
+        {% for message in messages  %}
+          {{message|safe}}
+        {% endfor %}
+      </div>
+      {% endif %}
+        <div class="row g-3">
+          {% if basket|length == 0 %}
+          <div class="col-12">There are no delivery options <a href="{% url 'shop:index' %}">Shop</a></div>
+          {% else %}
+          <div class="col-md-4 col-lg-4 order-md-last p-0 order-3">
+            <div class="d-flex bd-highlight ms-0">
+              <div class="p-2 flex-grow-1 bd-highlight">Quantity: </div>
+              <div class="p-2 bd-highlight"><span class="fw-bold h5"></span><span id="basket_total"
+                  class="fw-bold h5">{{basket.quantity}}</span></div>
+            </div>
+            <div class="d-flex bd-highlight">
+              <div class="p-2 flex-grow-1 bd-highlight">Total Price:</div>
+              <div class="p-2 bd-highlight"><span class="fw-bold h5">$ </span><span id="basket_price"
+                  class="fw-bold h5">{{basket.get_delivery_price}}</span></div>
+            </div>
+            <!-- <div class="d-flex bd-highlight">
+              <div class="p-2 flex-grow-1 bd-highlight">Total:</div>
+              <div class="p-2 bd-highlight"><span class="fw-bold h5">$ </span><span id="total"
+                  class="fw-bold h5">{{ cart.total }}</span></div>
+            </div> -->
+            <a role="button" href="{% url "check:delivery_address" %}" class="btn btn-success fw-bold w-100"
+              type="button">order</a>
+          </div>
+          <div class="col-md-7 col-lg-8">
+            {% for option in basket %}
+            <div class="card mb-3 border-1 rounded-0 product-item me-md-4" data-index="{{option.id}}">
+              <div class="row g-0">
+                <!-- <div class="col-md-2 ps-3 ps-md-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-truck mt-2"
+                    viewBox="0 0 16 16">
+                    <path
+                      d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5v-7zm1.294 7.456A1.999 1.999 0 0 1 4.732 11h5.536a2.01 2.01 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456zM12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12v4zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                  </svg>
+                </div> -->
+                <div class="col-md-9 ps-md-1">
+                  <div class="card-body p-1">
+                    <p class="card-text ps-2 mb-1 pt-1 fw-bold">Product:{{option.name}}</p>
+                    <p class="card-text ps-2 pb-3">qty :{{option.qty}} Price: {{option.price}}</p>
+                  </div>
+                </div>
+                <div class="col-md-1 ps-md-1">
+                  <button type="button" data-index="4" value="4" class="add-button btn btn-success fw500">Add to
+                    basket</button>
+                <button type="button" data-index="4"  value="4" class="dimin-button btn btn-warning fw500">dimin to
+                    basket</button>
+                <button type="button"  data-index="1"  value="1" class="delete-button btn btn-danger fw500">delete 
+                    basket</button>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+     
+
+
+      <button type="button" data-index="4" value="4" class="add-button btn btn-success fw500">Add to
+        basket</button>
+    <button type="button" data-index="4"  value="4" class="dimin-button btn btn-warning fw500">dimin to
+        basket</button>
+    <button type="button"  data-index="1"  value="1" class="delete-button btn btn-danger fw500">delete 
+        basket</button>
+    
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 {% endblock content %}
+<div class="container">
+    <div class="col-12">
+    {% for message in messages %}
+        <h5> dfg{{ message}}</h5>{% endfor %}
+      <h1 class="h2">Your Basket</h1>
+    </div>
+    {% if basket|length == 0 %}
+    <div class="col-12">
+      <p>Your basket is empty <a href="{% url 'shop:index'%}">All product</a></p>
+      <!-- <p>View all <a href="'account:user_orders'---------">orders</a></p> -->
+    </div>
+  </div>
+  {% else %}
+  <div class="container">
+    <div class="row g-3">
+
+<div class="container">
+        {{ basket.get_total_price}}
+        {% for item in basket %}
+        {{ item.product}}
+        {{ item.price}}
+        {{ item.qty}}
+        {{ item.total_price}}
+        {% endfor %}
+      <div class="col-md-4 col-lg-4 order-md-last p-0 order-3">
+        <div class="d-flex bd-highlight ms-0">
+          <div class="p-2 flex-grow-1 bd-highlight">Sub Total:</div>
+          <div class="p-2 bd-highlight"><span class="fw-bold h5">£</span><span id="sub_total"
+              class="fw-bold h5">{{ price.total}}</span></div>
+        </div>
+        <!-- <div class="d-flex bd-highlight">
+          <div class="p-2 flex-grow-1 bd-highlight">Delivery Cost:</div>
+          <div class="p-2 bd-highlight"><span class="fw-bold h5">£</span><span id="delivery_price"
+            class="fw-bold h5">{{ price.delivery_price}}</span></div>
+        </div>
+        <div class="d-flex bd-highlight">
+          <div class="p-2 flex-grow-1 bd-highlight">Total:</div>
+          <div class="p-2 bd-highlight"><span class="fw-bold h5">£</span><span id="total"
+            class="fw-bold h5">{{ price.total}}</span></div>
+        </div> -->
+    </div>
+    <a role="button" href="{% url 'check:deliverychoices' %}" class="btn btn-success fw-bold w-100" type="button">Order</a>
+    </div>
+      </div>
+      <div class="col-md-7 col-lg-8">
+
+      </div>
+{% endif %}
+<div id="basket-qty"></div>
+<div id="basket"></div>
+<div id="total"></div>
+<div id="subtotal"></div>
+<!-- <button type="button" id="add-button" value="{{product.id}}" class="btn btn-success fw500">Add to -->
+<!-- <button type="button" data-index="4" value="4" class="add-button btn btn-success fw500">Add to
+    basket</button>
+<button type="button" data-index="4"  value="4" class="dimin-button btn btn-warning fw500">dimin to
+    basket</button>
+<button type="button"  data-index="1"  value="1" class="delete-button btn btn-danger fw500">delete 
+    basket</button> -->
+
+
+</div>
+
+
+
+
+
+
+
+{% block js %}
+<script>
+
+  // Add Item
+  $(document).on("click", ".add-button", function (e) {
+    e.preventDefault();
+    var prodid = $(this).data("index");
+    $.ajax({
+      type: "POST",
+      url: '{% url "basket:basket_add" %}',
+      data: {
+        productid: $(this).data("index"),
+        csrfmiddlewaretoken: "{{csrf_token}}",
+        action: "post",
+      },
+      success: function (json) {
+        console.log('success add');
+        // $('.product-item[data-index="' + prodid + '"]').remove();
+        // if (json.qty == 0) {
+        //   total = 0
+        //   subtotal = 0
+        // } else {
+        //   total = (parseFloat(json.subtotal) + 11.50).toFixed(2);
+        //   subtotal = json.subtotal
+        // }
+
+        document.getElementById("qty").innerHTML = json.qty;
+        document.getElementById("sub_total").innerHTML = json.total;
+        // document.getElementById("subtotal").innerHTML = subtotal;
+        // console.log(json.basket[1]); // good----------
+          for (item in json.basket) {
+            console.log(json.basket[item]);
+            
+          }
+        // document.getElementById("basket").innerHTML = json.basket;
+
+      },
+      error: function (xhr, errmsg, err) {},
+    });
+  });
+
+
+  // Dimin Item
+  $(document).on("click", ".dimin-button", function (e) {
+    e.preventDefault();
+    var prodid = $(this).data("index");
+    $.ajax({
+      type: "POST",
+      url: '{% url "basket:basket_dimin" %}',
+      data: {
+        productid: $(this).data("index"),
+        csrfmiddlewaretoken: "{{csrf_token}}",
+        action: "post",
+      },
+      success: function (json) {
+        console.log('success dimin');
+        // $('.product-item[data-index="' + prodid + '"]').remove();
+
+        // if (json.qty == 0) {
+        //   total = 0
+        //   subtotal = 0
+        // } else {
+        //   total = (parseFloat(json.subtotal) + 11.50).toFixed(2);
+        //   subtotal = json.subtotal
+        // }
+
+        // document.getElementById("subtotal").innerHTML = subtotal;
+        document.getElementById("basket-qty").innerHTML = json.qty;
+        // document.getElementById("total").innerHTML = total;
+      },
+      error: function (xhr, errmsg, err) {},
+    });
+  });
+
+
+  // Delete Item
+  $(document).on("click", ".delete-button", function (e) {
+    e.preventDefault();
+    var prodid = $(this).data("index");
+    $.ajax({
+      type: "POST",
+      url: '{% url "basket:basket_delete" %}',
+      data: {
+        productid: $(this).data("index"),
+        csrfmiddlewaretoken: "{{csrf_token}}",
+        action: "post",
+      },
+      success: function (json) {
+        console.log('success delete');
+        // $('.product-item[data-index="' + prodid + '"]').remove();
+
+        // if (json.qty == 0) {
+        //   total = 0
+        //   subtotal = 0
+        // } else {
+        //   total = (parseFloat(json.subtotal) + 11.50).toFixed(2);
+        //   subtotal = json.subtotal
+        // }
+
+        // document.getElementById("subtotal").innerHTML = subtotal;
+        document.getElementById("basket-qty").innerHTML = json.qty;
+        // document.getElementById("total").innerHTML = total;
+      },
+      error: function (xhr, errmsg, err) {},
+    });
+  });
+
+</script>
+{% endblock js %}

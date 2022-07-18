@@ -103,6 +103,6 @@ class UserAdminChangeForm(forms.ModelForm):
 #     #             'class': 'form-control'
 #     #             # 'type': 'hidden'
 #     #         })
-#     class Meta:
-#         model = Address
-#         fields = ("__all__")
+    # class Meta:
+    #     model = Address
+    #     fields = "__all__"

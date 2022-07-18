@@ -113,11 +113,11 @@ if (typeof form !== 'undefined'){
 
 
 
-// //  popover
+//  popover
 
 
-// var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-// var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-//     return new bootstrap.Popover(popoverTriggerEl, {html:true}), 
-// document.getElementById('cart-popo').setAttribute('data-bs-content', item_nbr)
-// })
+var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+    return new bootstrap.Popover(popoverTriggerEl, {html:true}), 
+document.getElementById('cart-popo').setAttribute('data-bs-content', item_nbr)
+})
