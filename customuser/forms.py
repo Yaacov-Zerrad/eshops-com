@@ -1,3 +1,4 @@
+from email.policy import default
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
@@ -90,19 +91,47 @@ class UserAdminChangeForm(forms.ModelForm):
             return self.initial["password"]
 
 
-# class MyAddressForm(forms.ModelForm):
-#     def __iter__(self):
-#       for item in self.items.all():
-#          yield item
-#     # def __init__(self, *args, **kwargs):
-#     #     super(MyAddressForm, self).__init__(*args, **kwargs)
-#     #     ## add a "form-control" class to each form input
-#     #     ## for enabling bootstrap
-#     #     for name in self.fields.keys():
-#     #         self.fields[name].widget.attrs.update({
-#     #             'class': 'form-control'
-#     #             # 'type': 'hidden'
-#     #         })
-    # class Meta:
-    #     model = Address
-    #     fields = "__all__"
+# class AddressForm(forms.ModelForm):
+# #     def __iter__(self):
+# #       for item in self.items.all():
+# #          yield item
+# #     # def __init__(self, *args, **kwargs):
+# #     #     super(MyAddressForm, self).__init__(*args, **kwargs)
+# #     #     ## add a "form-control" class to each form input
+# #     #     ## for enabling bootstrap
+# #     #     for name in self.fields.keys():
+# #     #         self.fields[name].widget.attrs.update({
+# #     #             'class': 'form-control'
+# #     #             # 'type': 'hidden'
+# #     #         })
+#     class Meta:
+#         model = Address
+#         fields = ['name']
+
+
+
+class AddressForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(AddressForm, self).__init__(*args, **kwargs)
+        # add a "form-control" class to each form input
+        # for enabling bootstrap
+        for name in self.fields.keys():
+            if name != 'default':
+                self.fields[name].label = ''
+            else:
+                self.fields[name].label = 'Default Address'
+                
+            self.fields[name].widget.attrs.update({
+                'class': 'form-control',
+                'placeholder':f'Your {name}'
+                # 'type': 'hidden'
+            })
+    user = forms.CharField(widget=forms.HiddenInput())
+            
+    class Meta:
+        model = Address
+        fields = '__all__'
+
+
+
+    

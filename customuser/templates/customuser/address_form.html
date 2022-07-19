@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-md-center">
+        <h3>Add Address</h3>
+    </div>
+    <div class="row justify-content-md-center">
+
+        <div class="col-5">
+            
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <script>
+                    $('#id_user').val('{{user.id}}')
+                    </script>
+    <!-- <input type="" name="user" id="id_user" value="{{ user }}"> -->
+    <button type="submit" class="btn btn-outline-dark">Save Address</button>
+</form>
+</div>
+
+</div>
+</div>
+{% endblock content %}

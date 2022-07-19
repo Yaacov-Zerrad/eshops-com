@@ -20,7 +20,7 @@
     <div class="container">
           <div class="row g-3">
             {% if addresses|length == 0 %}
-            <div class="col-12">There are no delivery addresses, <a href="">add address</a></div>
+            <div class="col-12">There are no delivery addresses, <a href="{% url 'customuser:address_form' %}">add address</a></div>
             {% else %}
             <div class="col-md-4 col-lg-4 order-md-last p-0 order-3">
               <div class="d-flex bd-highlight ms-0">
@@ -65,9 +65,9 @@
                       <p class="card-text m-0">{{address.zipcode}}</p>
                       <p class="card-text m-0">Phone number: {{address.phone}}</p>
                       <div class="pt-5">
-                        <a href="" class="text-decoration-none">Edit</a>
+                        <a href="{% url 'customuser:address_update' address.id %}" class="text-decoration-none">Edit</a>
                         {% if not address.default %}
-                    | <a href="" class="text-decoration-none">Select</a>
+                    | <a href="{% url 'customuser:address_default' address.id %}" class="text-decoration-none">Select</a>
                     {% endif %}
                   </div>
               </div>

@@ -3,7 +3,8 @@ from django.contrib.auth import get_user_model
 
 # Create your models here.
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
-from django.contrib.auth.models import Group, Permission 
+from django.contrib.auth.models import Group, Permission
+from django.urls import reverse 
 
 class UserManager(BaseUserManager):
     """model gestion"""
@@ -131,4 +132,8 @@ class Address(models.Model):
     
     def __str__(self):
         return self.name
+    
+    def get_absolute_url(self):
+        return reverse("address_update", kwargs={"pk": self.pk})
+    
     

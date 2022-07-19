@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-md-center">
+        <h3>Delete Address</h3>
+    </div>
+    <div class="row justify-content-md-center">
+
+        <div class="col-7">
+            
+            <h4>Are you sure wanth to delete address name: <br><strong>{{ name}}</strong></h4>
+            <form action="" method="post">
+                {% csrf_token %}
+    <!-- <input type="" name="user" id="id_user" value="{{ user }}"> -->
+    <button type="submit" class="btn btn-danger">Delete Address</button>
+</form>
+</div>
+
+</div>
+</div>
+{% endblock content %}

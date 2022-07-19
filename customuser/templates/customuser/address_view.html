@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row"id="address_list">
+      
+    </div>
+
+    <script>
+        fetch("{% url 'customuser:address_list' %}",{
+  headers:{
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
+    },
+}).then(function(response){
+            // list addresses
+            return response.json()
+        }).then(data =>{
+            console.log(data);
+            if (data.addresses.length == 0 ){
+                document.getElementById('address_list').innerHTML = `There are no delivery addresses, <a href="{% url 'customuser:address_form' %}">add address</a>`
+            }
+            else{
+                for (i in data['addresses']){
+                    address = data['addresses'][i].fields
+                    let pk = data['addresses'][i].pk
+                    let selectdefault =''
+                    if (address['default'] !== true){
+                        selectdefault = `<a href="/customuser/address_default/${pk}" class="card-link">  Select default</a>`
+                    }
+                    document.getElementById('address_list').innerHTML += `
+                    <div class="card  " style="width: 18rem;">
+                        <div class="card-body ">
+                            <h5 class="card-title">${address['name']}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Address:<br> ${address['address']}</h6>
+                            <h6 class="card-subtitle mb-2 text-muted">${address['city']}</h6>
+                            <h6 class="card-subtitle mb-2 text-muted">${address['country']}</h6>
+                            <h6 class="card-subtitle mb-2 text-muted">Zipcode: ${address['zipcode']}</h6>
+                            <h6 class="card-subtitle mb-2 text-muted">Tel: ${address['phone']}</h6>
+                            <a href="/customuser/address_update/${pk}" class="card-link">Edit</a>
+                            <a href="/customuser/address_delete/${pk}" class="card-link">Delete</a> `+ selectdefault+`</div></div>`
+
+                            
+                }
+            }
+            
+        }).catch(function(error){
+            console.log('error')
+        })
+    </script>
+{% endblock content %}
