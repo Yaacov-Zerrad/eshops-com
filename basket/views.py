@@ -1,8 +1,26 @@
+import json
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.forms.models import model_to_dict
 from basket.models import Basket
+# from basket.serializers import BasketSerializer
 from shop.models import Product
+from django.core import serializers
+
+
+
+
+def basket_json(request):
+    """json basket"""
+    basket = Basket(request)
+    data = request.session.get('basket')
+    return JsonResponse(data)
+
+def basket_view(request):
+    return render(request, 'basket/basket_view.html')
+
+
+
 
 def basket_page(request):
     basket = Basket(request)
@@ -35,9 +53,9 @@ def basket_dimin(request):
         basket.dimin(product=product)
         basket.save()
         basketqty = basket.__len__()
-        basket = 1# basket.__iter__()
-        baskettotal = 1 # basket.get_total_price()
-        return  JsonResponse({'qty': basketqty, 'subtotal': baskettotal} )
+        baskettotal = basket.get_total_price()
+        basket = request.session['basket']
+        return  JsonResponse({'basket': basket, 'qty':basketqty, 'total':baskettotal} )
 
 
 def basket_delete(request):
@@ -46,10 +64,9 @@ def basket_delete(request):
     if request.POST.get('action') == 'post':
         product_id = int(request.POST.get('productid'))
         basket.delete(product=product_id)
-
         basketqty = basket.__len__()
-        baskettotal = '1' # basket.get_total_price()
-        response = JsonResponse({'qty': basketqty})
+        baskettotal = basket.get_total_price()
+        response = JsonResponse({'basket': basket, 'qty':basketqty, 'total':baskettotal})
         return response
 
 

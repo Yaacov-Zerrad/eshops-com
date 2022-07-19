@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+<div class="container">       
+  <!-- title -->
+  <div class="col-12">
+      <h2>Basket list</h2>
+  </div>
+  <div class="col-12">
+      <p>This your articles</p>
+  </div>
+  <hr />
+  <div class="container">
+    <!-- right side -->
+    <div class="row g-3">
+      <div class="col-md-4 col-lg-4 order-md-last p-0 order-3">
+        <div class="d-flex bd-highlight ms-0">
+          <div class="p-2 flex-grow-1 bd-highlight">Quantity: </div>
+          <div class="p-2 bd-highlight"><span class="fw-bold h5"></span><span id="basket-qty"
+              class="fw-bold h5">{{basket.quantity}}</span></div>
+          </div>
+          <div class="d-flex bd-highlight">
+          <div class="p-2 flex-grow-1 bd-highlight">Total Price:</div>
+          <div class="p-2 bd-highlight"><span class="fw-bold h5">$ </span><span id="basket-price"
+              class="fw-bold h5">{{basket.get_delivery_price}}</span></div>
+        </div>
+        <a role="button" href="{% url "check:delivery_address" %}" class="btn btn-success fw-bold w-100"
+            type="button">order</a>
+    </div>
+          <!-- left side -->
+  <div class="col-md-7 col-lg-8">
+    <div id="card_product"></div>
+
+</div>
+{% endblock content %}
+
+
+
+{% block js %}
+<script>
+fetch("{% url 'basket:basket_json' %}", ).then(response =>{
+  return response.json();
+}).then(data =>{
+  console.log(data);
+  for(i in data){
+    product =  data[i]
+    console.log(product);
+    document.getElementById('card_product').innerHTML +=`
+    <div class="card">
+      <div class="card-body">
+        <div class="container">
+          <div class="row">
+            <button type="button"  data-index="${i}"   class="delete-button btn btn-outline-danger btn-sm">delete</button>
+            <h5 class="col"><br>${product.name}</h5>
+            <p class="col">Qty:<br>
+              <button type="button" data-index="${i}"   class="dimin-button btn btn-outline-warning btn-sm">-</button>
+              <span id='qty-${i}' >${product.qty}</span>
+              <button type="button" data-index="${i}"  class="add-button btn btn-outline-success btn-sm" >+</button>
+            </p>
+            <div class="col">Total Price:<br><span id='price-${i}' >${product.price * product.qty}</span></div>
+          </div>
+        </div>
+      </div>
+    </div>`
+  }
+
+}).catch( error =>{
+  console.log('error basket list');
+})
+
+
+
+
+
+
+
+  // Add Item
+  $(document).on("click", ".add-button", function (e) {
+    e.preventDefault();
+    var prodid = $(this).data("index");
+    $.ajax({
+      type: "POST",
+      url: '{% url "basket:basket_add" %}',
+      data: {
+        productid: $(this).data("index"),
+        csrfmiddlewaretoken: "{{csrf_token}}",
+        action: "post",
+      },
+      success: function (json) {
+        console.log('success add');
+        console.log(json.basket[prodid].price);
+        let qty_prod = json.basket[prodid].qty
+        let price_prod =json.basket[prodid].price * qty_prod
+
+
+        document.getElementById("basket-qty").innerHTML = json.qty;
+        document.getElementById("basket-price").innerHTML = json.total;
+        document.getElementById(`qty-${prodid}`).innerHTML = qty_prod;
+        document.getElementById(`price-${prodid}`).innerHTML = price_prod;
+
+        // document.getElementById("subtotal").innerHTML = subtotal;
+        // console.log(json.basket[1]); // good----------
+          for (item in json.basket) {
+            console.log(json.basket[item]);
+            
+          }
+        // document.getElementById("basket").innerHTML = json.basket;
+
+      },
+      error: function (xhr, errmsg, err) {},
+    });
+  });
+
+
+  // Dimin Item
+  $(document).on("click", ".dimin-button", function (e) {
+    e.preventDefault();
+    var prodid = $(this).data("index");
+    $.ajax({
+      type: "POST",
+      url: '{% url "basket:basket_dimin" %}',
+      data: {
+        productid: $(this).data("index"),
+        csrfmiddlewaretoken: "{{csrf_token}}",
+        action: "post",
+      },
+      success: function (json) {
+        console.log('success dimin');
+
+        // $('.product-item[data-index="' + prodid + '"]').remove();
+
+        // if (json.qty == 0) {
+        //   total = 0
+        //   subtotal = 0
+        // } else {
+        //   total = (parseFloat(json.subtotal) + 11.50).toFixed(2);
+        //   subtotal = json.subtotal
+        // }
+
+        // document.getElementById("subtotal").innerHTML = subtotal;
+        let qty_prod = json.basket[prodid].qty
+        let price_prod =json.basket[prodid].price * qty_prod
+
+
+        document.getElementById("basket-qty").innerHTML = json.qty;
+        document.getElementById("basket-price").innerHTML = json.total;
+        document.getElementById(`qty-${prodid}`).innerHTML = qty_prod;
+        document.getElementById(`price-${prodid}`).innerHTML = price_prod;
+      },
+      error: function (xhr, errmsg, err) {},
+    });
+  });
+
+
+  // Delete Item
+  $(document).on("click", ".delete-button", function (e) {
+    e.preventDefault();
+    var prodid = $(this).data("index");
+    $.ajax({
+      type: "POST",
+      url: '{% url "basket:basket_delete" %}',
+      data: {
+        productid: $(this).data("index"),
+        csrfmiddlewaretoken: "{{csrf_token}}",
+        action: "post",
+      },
+      success: function (json) {
+        console.log('success delete');
+        // $('.product-item[data-index="' + prodid + '"]').remove();
+
+        // if (json.qty == 0) {
+        //   total = 0
+        //   subtotal = 0
+        // } else {
+        //   total = (parseFloat(json.subtotal) + 11.50).toFixed(2);
+        //   subtotal = json.subtotal
+        // }
+
+        // document.getElementById("subtotal").innerHTML = subtotal;
+        document.getElementById("basket-qty").innerHTML = json.qty;
+        document.getElementById("basket-price").innerHTML = json.total;
+
+      },
+      error: function (xhr, errmsg, err) {},
+    });
+  });
+
+</script>
+
+
+
+{% endblock js %}
+
+
+
+
+
+
+
+
+
+            <div class="col-md-7 col-lg-8">
+
+
+                <div class="card mb-3 border-1 rounded-0 product-item me-md-4" data-index="{{option.id}}">
+                <div class="row g-0">
+
+                    
+
+
+                  
+                  
+                  <div class="col-md-9 ps-md-1">
+                    <div class="card-body p-1">
+                      <div class="card-text ps-2 mb-1 pt-1 fw-bold ">Product:{{option.name}}qty :{{option.qty}} Price: {{option.price}}
+                      <!-- <p class="card-text ps-2 pb-3"></p> -->
+                      <!-- <div class="col-md-4 ps-md-4"> -->
+                          <button type="button" data-index="4" value="4" class="add-button btn btn-success">+</button>
+                          <button type="button" data-index="4"  value="4" class="dimin-button btn btn-warning">-</button>
+                          <button type="button"  data-index="1"  value="1" class="delete-button btn btn-danger">delete</button>
+                          </div>
+                        </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            
+          </div>
+        </div>
+       

@@ -188,14 +188,7 @@
       },
       success: function (json) {
         console.log('success add');
-        // $('.product-item[data-index="' + prodid + '"]').remove();
-        // if (json.qty == 0) {
-        //   total = 0
-        //   subtotal = 0
-        // } else {
-        //   total = (parseFloat(json.subtotal) + 11.50).toFixed(2);
-        //   subtotal = json.subtotal
-        // }
+
 
         document.getElementById("qty").innerHTML = json.qty;
         document.getElementById("sub_total").innerHTML = json.total;

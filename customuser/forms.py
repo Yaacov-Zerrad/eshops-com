@@ -124,7 +124,7 @@ class AddressForm(forms.ModelForm):
             self.fields[name].widget.attrs.update({
                 'class': 'form-control',
                 'placeholder':f'Your {name}'
-                # 'type': 'hidden'
+                #'type': 'hidden'
             })
     user = forms.CharField(widget=forms.HiddenInput())
             

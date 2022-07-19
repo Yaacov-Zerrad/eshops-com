@@ -6,8 +6,32 @@
       
     </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <script>
-        fetch("{% url 'customuser:address_list' %}",{
+        fetch("{% url ' %'customuser:address_list}",{
   headers:{
         'Accept': 'application/json',
         'X-Requested-With': 'XMLHttpRequest', //Necessary to work with request.is_ajax()
@@ -40,7 +64,7 @@
                             <a href="/customuser/address_update/${pk}" class="card-link">Edit</a>
                             <a href="/customuser/address_delete/${pk}" class="card-link">Delete</a> `+ selectdefault+`</div></div>`
 
-                            
+
                 }
             }
             
