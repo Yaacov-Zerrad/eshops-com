@@ -27,7 +27,7 @@
           <div class="p-2 bd-highlight"><span class="fw-bold h5">$ </span><span id="basket-price"
               class="fw-bold h5">{{basket.get_delivery_price}}</span></div>
         </div>
-        <a role="button" href="{% url "check:delivery_address" %}" class="btn btn-success fw-bold w-100"
+        <a role="button" href="{% url 'check:deliverychoices' %}" class="btn btn-success fw-bold w-100"
             type="button">order</a>
     </div>
           <!-- left side -->
@@ -41,117 +41,105 @@
 
 {% block js %}
 <script>
-fetch("{% url 'basket:basket_json' %}", ).then(response =>{
-  return response.json();
-}).then(data =>{
-  console.log(data);
-  for(i in data){
-    product =  data[i]
-    console.log(product);
-    document.getElementById('card_product').innerHTML +=`
-    <div class="card">
-      <div class="card-body">
-        <div class="container">
-          <div class="row">
-            <button type="button"  data-index="${i}"   class="delete-button btn btn-outline-danger btn-sm">delete</button>
-            <h5 class="col"><br>${product.name}</h5>
-            <p class="col">Qty:<br>
-              <button type="button" data-index="${i}"   class="dimin-button btn btn-outline-warning btn-sm">-</button>
-              <span id='qty-${i}' >${product.qty}</span>
-              <button type="button" data-index="${i}"  class="add-button btn btn-outline-success btn-sm" >+</button>
-            </p>
-            <div class="col">Total Price:<br><span id='price-${i}' >${product.price * product.qty}</span></div>
-          </div>
-        </div>
-      </div>
-    </div>`
-  }
-
-}).catch( error =>{
-  console.log('error basket list');
-})
+  
+  //-------------------good juste une base.html--------------------
+  
+  basket_fetch()
 
 
 
 
 
 
+  //-------------------good juste une base.html--------------------
 
-  // Add Item
-  $(document).on("click", ".add-button", function (e) {
-    e.preventDefault();
-    var prodid = $(this).data("index");
-    $.ajax({
-      type: "POST",
-      url: '{% url "basket:basket_add" %}',
-      data: {
-        productid: $(this).data("index"),
-        csrfmiddlewaretoken: "{{csrf_token}}",
-        action: "post",
-      },
-      success: function (json) {
-        console.log('success add');
-        console.log(json.basket[prodid].price);
-        let qty_prod = json.basket[prodid].qty
-        let price_prod =json.basket[prodid].price * qty_prod
+  // // Add Item
+  // $(document).on("click", ".add-button", function (e) {
+  //   e.preventDefault();
+  //   var prodid = $(this).data("index");
+  //   $.ajax({
+  //     type: "POST",
+  //     url: '{% url "basket:basket_add" %}',
+  //     data: {
+  //       productid: $(this).data("index"),
+  //       csrfmiddlewaretoken: "{{csrf_token}}",
+  //       action: "post",
+  //     },
+  //     success: function (json) {
+  //       console.log('success add');
+  //       console.log(json.basket[prodid].price);
+  //       let qty_prod = json.basket[prodid].qty
+  //       let price_prod =json.basket[prodid].price * qty_prod
 
 
-        document.getElementById("basket-qty").innerHTML = json.qty;
-        document.getElementById("basket-price").innerHTML = json.total;
-        document.getElementById(`qty-${prodid}`).innerHTML = qty_prod;
-        document.getElementById(`price-${prodid}`).innerHTML = price_prod;
+  //       document.getElementById("basket-qty").innerHTML = json.qty;
+  //       document.getElementById("basket-price").innerHTML = json.total;
+  //       document.getElementById(`qty-${prodid}`).innerHTML = qty_prod;
+  //       document.getElementById(`price-${prodid}`).innerHTML = price_prod;
 
-        // document.getElementById("subtotal").innerHTML = subtotal;
-        // console.log(json.basket[1]); // good----------
-          for (item in json.basket) {
-            console.log(json.basket[item]);
+  //       // document.getElementById("subtotal").innerHTML = subtotal;
+  //       // console.log(json.basket[1]); // good----------
+  //         for (item in json.basket) {
+  //           console.log(json.basket[item]);
             
-          }
-        // document.getElementById("basket").innerHTML = json.basket;
+  //         }
+  //       // document.getElementById("basket").innerHTML = json.basket;
 
-      },
-      error: function (xhr, errmsg, err) {},
-    });
-  });
+  //     },
+  //     error: function (xhr, errmsg, err) {},
+  //   });
+  // });
 
 
   // Dimin Item
   $(document).on("click", ".dimin-button", function (e) {
     e.preventDefault();
     var prodid = $(this).data("index");
-    $.ajax({
+    if(document.getElementById(`qty-${prodid}`).textContent >1){
+      $.ajax({
+        type: "POST",
+        url: '{% url "basket:basket_dimin" %}',
+        data: {
+          productid: $(this).data("index"),
+          csrfmiddlewaretoken: "{{csrf_token}}",
+          action: "post",
+        },
+        success: function (json) {
+          console.log('success dimin');
+          let qty_prod = json.basket[prodid].qty
+          if(qty_prod === 0){alert('if you want delete press delete')}
+          console.log(qty_prod);
+          let price_prod =json.basket[prodid].price * qty_prod
+
+
+          document.getElementById("basket-qty").innerHTML = json.qty;
+          document.getElementById("basket-price").innerHTML = json.total;
+          document.getElementById(`qty-${prodid}`).innerHTML = qty_prod;
+          document.getElementById(`price-${prodid}`).innerHTML = price_prod;
+          basket_fetch()
+        },
+        error: function (xhr, errmsg, err) {},
+      })
+    }else{
+      let conf = confirm('You are sure you want supprim here article?')
+      if( conf == true ) {
+      $.ajax({
       type: "POST",
-      url: '{% url "basket:basket_dimin" %}',
+      url: '{% url "basket:basket_delete" %}',
       data: {
         productid: $(this).data("index"),
         csrfmiddlewaretoken: "{{csrf_token}}",
         action: "post",
       },
       success: function (json) {
-        console.log('success dimin');
-
-        // $('.product-item[data-index="' + prodid + '"]').remove();
-
-        // if (json.qty == 0) {
-        //   total = 0
-        //   subtotal = 0
-        // } else {
-        //   total = (parseFloat(json.subtotal) + 11.50).toFixed(2);
-        //   subtotal = json.subtotal
-        // }
-
-        // document.getElementById("subtotal").innerHTML = subtotal;
-        let qty_prod = json.basket[prodid].qty
-        let price_prod =json.basket[prodid].price * qty_prod
-
-
-        document.getElementById("basket-qty").innerHTML = json.qty;
-        document.getElementById("basket-price").innerHTML = json.total;
-        document.getElementById(`qty-${prodid}`).innerHTML = qty_prod;
-        document.getElementById(`price-${prodid}`).innerHTML = price_prod;
+        console.log('success delete');
+        // document.getElementById("basket-qty").innerHTML = json.qty;
+        // document.getElementById("basket-price").innerHTML = json.total;
+        basket_fetch()
       },
       error: function (xhr, errmsg, err) {},
-    });
+    });}
+    }
   });
 
 
@@ -159,6 +147,8 @@ fetch("{% url 'basket:basket_json' %}", ).then(response =>{
   $(document).on("click", ".delete-button", function (e) {
     e.preventDefault();
     var prodid = $(this).data("index");
+    let conf = confirm('You are sure you want supprim here article?')
+    if( conf == true ) {
     $.ajax({
       type: "POST",
       url: '{% url "basket:basket_delete" %}',
@@ -169,23 +159,12 @@ fetch("{% url 'basket:basket_json' %}", ).then(response =>{
       },
       success: function (json) {
         console.log('success delete');
-        // $('.product-item[data-index="' + prodid + '"]').remove();
-
-        // if (json.qty == 0) {
-        //   total = 0
-        //   subtotal = 0
-        // } else {
-        //   total = (parseFloat(json.subtotal) + 11.50).toFixed(2);
-        //   subtotal = json.subtotal
-        // }
-
-        // document.getElementById("subtotal").innerHTML = subtotal;
-        document.getElementById("basket-qty").innerHTML = json.qty;
-        document.getElementById("basket-price").innerHTML = json.total;
-
+        // document.getElementById("basket-qty").innerHTML = json.qty;
+        // document.getElementById("basket-price").innerHTML = json.total;
+        basket_fetch()
       },
       error: function (xhr, errmsg, err) {},
-    });
+    });}
   });
 
 </script>

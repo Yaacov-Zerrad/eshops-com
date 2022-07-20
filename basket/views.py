@@ -27,7 +27,8 @@ def basket_page(request):
     # good -----request.session['basket']
 
     print('basket page')
-    return render(request, 'basket/checkout.html', {'basket': basket})
+
+    return render(request, 'basket/checkout.html', {'basket': basket, })
 
 
 def basket_add(request):
@@ -56,18 +57,27 @@ def basket_dimin(request):
         baskettotal = basket.get_total_price()
         basket = request.session['basket']
         return  JsonResponse({'basket': basket, 'qty':basketqty, 'total':baskettotal} )
-
-
+    
+    
 def basket_delete(request):
     basket = Basket(request)
-    print('basket delete')
+    print('basket dimin')
     if request.POST.get('action') == 'post':
         product_id = int(request.POST.get('productid'))
         basket.delete(product=product_id)
-        basketqty = basket.__len__()
-        baskettotal = basket.get_total_price()
-        response = JsonResponse({'basket': basket, 'qty':basketqty, 'total':baskettotal})
-        return response
+        basket.save()
+        basket = request.session['basket']
+        return  JsonResponse({'basket': basket} )
+
+
+# def basket_delete(request):
+#     basket = Basket(request)
+#     if request.method == 'POST':
+#         print('basket delete')
+#         # product_id = int(request.POST.get('productid'))
+#         # basket.delete(product=product_id)
+
+#     return  JsonResponse({'basket': 'basket'})
 
 
 # def basket_update(request):

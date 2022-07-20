@@ -26,7 +26,7 @@
               <div class="d-flex bd-highlight ms-0">
                 <div class="p-2 flex-grow-1 bd-highlight">Sub Total:</div>
                 <div class="p-2 bd-highlight"><span class="fw-bold h5">$ </span><span id="sub_total"
-                    class="fw-bold h5">{{ price.total }}</span></div>
+                    class="fw-bold h5">{{ price.before_price }}</span></div>
               </div>
               <div class="d-flex bd-highlight">
                 <div class="p-2 flex-grow-1 bd-highlight">Delivery Cost:</div>
@@ -93,26 +93,5 @@
 {% endblock content %}   
 
 {% block js %}
-<script>
-    $('input[type=radio][name=deliveryOption]').on('change', function(e) {
-      e.preventDefault();
-      $.ajax({
-        type: "POST",
-        url: '{% url "check:cart_update_delivery" %}',
-        data: {
-          deliveryoption: $(this).val(),
-          csrfmiddlewaretoken: "{{csrf_token}}",
-          action: "post",
-        },
-        success: function (json) {
-          document.getElementById("total").innerHTML = json.total;
-          document.getElementById("delivery_price").innerHTML = json.delivery_price;
-        },
-        error: function (xhr, errmsg, err) {},
-      });
-      
-    });
-    document.getElementById("total").innerHTML = json.total;
-    document.getElementById("delivery_price").innerHTML = json.delivery_price;
-  </script>
+
 {% endblock js %}

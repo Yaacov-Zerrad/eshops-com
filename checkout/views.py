@@ -36,6 +36,7 @@ def cart_update_delivery(request):
         
         delivery_price = int(delivery_type.delivery_price)
         update_total_price = cart.total +int( delivery_price)
+        before_price = cart.total
         
         #add in session
         session = request.session
@@ -49,12 +50,14 @@ def cart_update_delivery(request):
             
         if 'price' not in request.session:
             session['price'] = {
-                'total': update_total_price,
-                'delivery_price': delivery_price
+                'before_price':before_price,
+                'delivery_price': delivery_price,
+                'total': update_total_price
             }
         else:
             session['price']['total'] = update_total_price
             session['price']['delivery_price'] = delivery_price
+            session['price']['before_price'] = before_price
             session.modified =True
         
         response = JsonResponse({'total': update_total_price, 'delivery_price': delivery_price })

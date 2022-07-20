@@ -65,38 +65,23 @@
                 <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                     <div class="text-center">
                         
+                        {% csrf_token %}
                         
                         
-                        <form  method="POST" id="form-{{product.slug}}" >
-                            <div class="row">
-                                {% csrf_token %}
-                                <!-- {% for field in form %}
-                                    {{ field }}            
-                                    {% endfor %} -->
-                                    <!-- <input type="hidden" name="text-{{ product.slug }}"value="{{ product.slug }}" id="text-{{ product.slug }}">
-                                    <input type="submit" id="sub-{{ product.slug }}" class="btn tedd btn-outline-dark mt-auto " value="Add to cart" /> -->
-                                    <!-- <input type="submit" id="add-{{ product.slug }}"  value="{{ product.slug }}" class="add btn btn-outline-dark"> -->
-                                    
-                                    
-                                    <input type="hidden" name="slug" id="slug{{product.slug}}">
-                                    <script>
-                                        // for donne value in slug
-                                        var slug = '{{ product.slug }}'
-                                        document.getElementById('slug'+slug).setAttribute('value',slug);
-                                        console.log(slug);
-                                         // for change id in form
-                                         var form = "#form-{{product.slug}}"
-                                         console.log(form);
-                                                add(form)
-                                                
+                        <div class="row">
+
                                          
                                          
                                     </script>
-
-                                    <button  type="submit" id="form" class="ted btn btn-outline-dark flex-shrink-0" value="" >
+                                    <button type="button" data-index="{{ product.id }}"  class="add-button btn btn-outline-dark flex-shrink-0">
                                         <i class="bi-cart-fill me-1" ></i>
                                         add the article
                                     </button>
+
+                                    <!-- <button  type="submit" id="form" class="ted btn btn-outline-dark flex-shrink-0" value="" >
+                                        <i class="bi-cart-fill me-1" ></i>
+                                        add the article
+                                    </button> -->
                             </div>
                         </form>
 

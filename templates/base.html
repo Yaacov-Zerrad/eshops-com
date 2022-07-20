@@ -64,8 +64,7 @@
                             <i class="bi-cart-fill me-1"></i>
                             <a href="{% url 'shop:checkout' %}"></a>
                                 Cart
-                            <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart">{{ user.cart.articles.count }}</span>
-                            <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart"></span>
+                            <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart-qty"></span>
                           </button>
                         {% endif %}
 
@@ -109,7 +108,81 @@
         <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>-->
         <script src="{% static 'detail/js/ready.js' %}"></script> 
 
+<script>
+function basket_fetch(){fetch("{% url 'basket:basket_json' %}", ).then(response =>{
+  return response.json();
+}).then(data =>{
+  let price_total = 0
+  // navbar button 'cart'
+  document.getElementById("cart-qty").innerHTML = Object.keys(data).length;
 
+  // basket_view 
+  // if (document. getElementById('card_product') !== null){     }
+  document.getElementById("basket-qty").innerHTML = Object.keys(data).length;
+  document.getElementById('card_product').innerHTML = ''
+  for(i in data){
+      product =  data[i]
+      let price = product.price * product.qty
+      price_total+= price
+    document.getElementById('card_product').innerHTML +=`
+    <div class="card">
+      <div class="card-body">
+        <div class="container">
+          <div class="row">
+            <button type="button" data-index="${i}"  class="delete-button btn btn-outline-danger btn-sm" >Delete</button>
+            <h5 class="col"><br>${product.name}</h5>
+            <p class="col">Qty:<br>
+              <button type="button" data-index="${i}"   class="dimin-button btn btn-outline-warning btn-sm">-</button>
+              <span id='qty-${i}' >${product.qty}</span>
+              <button type="button" data-index="${i}"  class="add-button btn btn-outline-success btn-sm" >+</button>
+            </p>
+            <div class="col">Total Price:<br><span id='price-${i}' >${price}</span></div>
+          </div>
+        </div>
+      </div>
+    </div>`
+    document.getElementById("basket-price").innerHTML = price_total;} 
+  
+}).catch( error =>{
+  console.log('error basket list');
+})}
+
+basket_fetch()
+
+
+  // Add Item
+  $(document).on("click", ".add-button", function (e) {
+    e.preventDefault();
+    var prodid = $(this).data("index");
+    $.ajax({
+      type: "POST",
+      url: '{% url "basket:basket_add" %}',
+      data: {
+        productid: $(this).data("index"),
+        csrfmiddlewaretoken: "{{csrf_token}}",
+        action: "post",
+      },
+      success: function (json) {
+        console.log('success add');
+        let qty_prod = json.basket[prodid].qty
+        let price_prod =json.basket[prodid].price * qty_prod
+
+
+        // document.getElementById("basket-qty").innerHTML = json.qty;
+        // document.getElementById("basket-price").innerHTML = json.total;
+        document.getElementById(`qty-${prodid}`).innerHTML = qty_prod;
+        document.getElementById(`price-${prodid}`).innerHTML = price_prod;
+        basket_fetch()
+
+
+      },
+      error: function (xhr, errmsg, err) {},
+    });
+  });
+
+
+
+</script>
         {% block js %}
         
         {% endblock js %}
