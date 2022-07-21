@@ -1,0 +1,28 @@
+{% autoescape off %}
+
+<div class="container">
+    <!-- <h5>hello sa mere</h5> -->
+<h5>Hello {{name}}</h5>
+
+
+<p>
+we have received your form about {{ subject }}. <br><br>
+we will answer you as soon as possible.<br>
+In the meantime, we let you browse our site
+link: https//{{domain}}{% url 'shop:index' %}
+
+</p>
+<p>
+    
+    or register if you haven't done so yet 
+    link: https//{{domain}}{% url 'log:register' %}
+</p>
+</div>
+
+
+
+
+
+
+
+{% endautoescape %}

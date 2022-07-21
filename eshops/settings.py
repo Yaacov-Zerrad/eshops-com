@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'log',
     'checkout',
     'basket',
+    'messaging',
 ]
 
 
