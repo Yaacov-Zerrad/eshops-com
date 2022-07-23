@@ -11,6 +11,10 @@ from shop.models import Cart, Order
 
 from .models import DeliveryOptions
 
+#----------- not useful
+#----------- not useful
+#----------- not useful
+#----------- not useful
 @login_required
 def deliverychoices(request):
     """choix ou delivery"""
@@ -101,10 +105,6 @@ def payment_selection(request):
     return render(request, 'checkout/payment_selection.html', {'price':price})
 
 
-# from paypalcheckoutsdk.orders import OrdersGetRequest
-
-# from .paypal import PayPalClient
-# # on peut tou faire en recuperent leur inform depui leur log capture
 
 body = ''
 @login_required

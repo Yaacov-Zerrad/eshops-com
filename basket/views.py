@@ -7,21 +7,22 @@ from basket.models import Basket
 from shop.models import Product
 from django.core import serializers
 
+from django.contrib.auth.decorators import login_required
 
 
-
+@login_required
 def basket_json(request):
     """json basket"""
     basket = Basket(request)
     data = request.session.get('basket')
     return JsonResponse(data)
-
+@login_required
 def basket_view(request):
     return render(request, 'basket/basket_view.html')
 
 
 
-
+@login_required
 def basket_page(request):
     basket = Basket(request)
     # good -----request.session['basket']
@@ -30,7 +31,7 @@ def basket_page(request):
 
     return render(request, 'basket/checkout.html', {'basket': basket, })
 
-
+@login_required
 def basket_add(request):
     basket = Basket(request)
     print('basket add')
@@ -44,7 +45,7 @@ def basket_add(request):
         basket = request.session['basket']
         return  JsonResponse({'basket': basket, 'qty':basketqty, 'total':baskettotal} )
 
-
+@login_required
 def basket_dimin(request):
     basket = Basket(request)
     print('basket dimin')
@@ -58,7 +59,7 @@ def basket_dimin(request):
         basket = request.session['basket']
         return  JsonResponse({'basket': basket, 'qty':basketqty, 'total':baskettotal} )
     
-    
+@login_required   
 def basket_delete(request):
     basket = Basket(request)
     print('basket dimin')
@@ -68,26 +69,3 @@ def basket_delete(request):
         basket.save()
         basket = request.session['basket']
         return  JsonResponse({'basket': basket} )
-
-
-# def basket_delete(request):
-#     basket = Basket(request)
-#     if request.method == 'POST':
-#         print('basket delete')
-#         # product_id = int(request.POST.get('productid'))
-#         # basket.delete(product=product_id)
-
-#     return  JsonResponse({'basket': 'basket'})
-
-
-# def basket_update(request):
-#     basket = Basket(request)
-#     if request.POST.get('action') == 'post':
-#         product_id = int(request.POST.get('productid'))
-#         product_qty = int(request.POST.get('productqty'))
-#         basket.update(product=product_id, qty=product_qty)
-
-#         basketqty = basket.__len__()
-#         basketsubtotal = basket.get_subtotal_price()
-#         response = JsonResponse({'qty': basketqty, 'subtotal': basketsubtotal})
-#         return response

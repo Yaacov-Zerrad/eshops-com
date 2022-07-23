@@ -8,6 +8,8 @@ from customuser.mixins import CheckPremiumGroupMixin
 from django.views.generic.list import ListView
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import Group
+from django.contrib.auth.decorators import login_required
+
 
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -19,11 +21,6 @@ from .form import OrderForm
 from .models import Article, Cart, Category, Product
 from django.core.paginator import Paginator
 
-
-from django.views.decorators.csrf import csrf_exempt
-
-def is_ajax(request):
-    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
 
 
@@ -50,7 +47,8 @@ def detail(request, pk):
     product = get_object_or_404(Product, id=pk)
     return render(request, 'detail.html', {'product': product, 'form': form, 'articles': articles })
 
-
+#----------- not useful
+@login_required
 def checkout(request):
     """cart and achat"""
     user = request.user
@@ -67,7 +65,8 @@ def checkout(request):
 
 
 
-
+#----------- not useful
+@login_required
 def add_article(request):
     """add article in db en ajax """
     if request.method == "POST":
@@ -96,7 +95,6 @@ def add_article(request):
             ser_instance = serializers.serialize('json', [ article.product, ])
             print(ser_instance)
             # send to client side.
-            # return HttpResponse({"article": article.product}, status=200)
             return JsonResponse({"instance": ser_instance}, status=200)
         else:
             # some form errors occured.
@@ -104,29 +102,24 @@ def add_article(request):
     
     return JsonResponse({"error": ""}, status=400) 
 
-# import json
-
+#----------- not useful
+@login_required
 def get_data_cart(request):
     """get table cart in json"""
     articles = Article.objects.filter(ordered=False, user=request.user)
     dictionary =  list([{'product':article.product.title, 'quantity':article.quantity}  for article in articles]  )
-    # list_articles = json.dumps(dictionary, indent=4)
-    # list_articles = ProductSerializer()
-    # data = ArticleSerializer( Article.objects.all(), many=True).data
-    # ser_instance = serializers.serialize('python',  articles)
-    # ser_instance = serializers.serialize('json', list_articles])
-
-    # return HttpResponse({'articles':list_articles})
     return JsonResponse({'articles':dictionary})
 
-
+#----------- not useful
+@login_required
 def delete_cart(request):
     if cart := request.user.cart:
         cart.delete()
     return redirect('index')
 
 
-
+#----------- not useful
+@login_required
 def add_product_test(request):
     """add product sans ce casser la tete"""
     bck= Category.objects.get(name='bck')
@@ -139,10 +132,6 @@ def add_product_test(request):
 
 
 
-# from django.views.decorators.csrf import csrf_exempt
-
-# @csrf_exempt
-       
 
 #-----------------------------------------
 # GROUP
@@ -194,60 +183,3 @@ class PermPerm(PermissionRequiredMixin, ListView):
     
     
     
-    
-    
-#---------------------------
-
-#---------------------------------------------
-# test et en plus
-def calcul(request):
-    products = Product.objects.all()
-    product_list = Product.objects.all()
-    return render(request, 'calcul.html' , {'products':product_list})
-
-
-def add_user_article(request):
-    """ajax sans bdd"""
-    
-    a = request.POST.get('a')
-    c = request.POST.get('c')
-    print(request.POST)
-    b = request.POST.get('b')
-    result = int(a) + int(b)
-
-
-    return JsonResponse({'operation_result': result})
-
-
-
-def add_to_cart(request, slug):
-    user = request.user
-    product = get_object_or_404(Product, slug=slug)
-    cart, _ = Cart.objects.get_or_create(user=user)
-    article, created = ArticleUser.objects.get_or_create(user=user, product=product)
-    
-    if created:
-        cart.articles.add(article)
-        cart.save()
-    else:
-        article.quantity +=1
-        article.save()
-    return redirect('shop:index')
-
-
-
-def indexajax(request):
-    form = ArticleForm()
-    articles = Article.objects.all()
-    list = [1, 2, 3]
-    return render(request, 'indexajax.html', {'form': form, 'articles': articles, 'list': list})
-
-
-
-
-
-def templates(request):
-    return render(request, 'templates.html')
-
-def temdetail(request):
-    return render(request, 'detail_temp.html')
